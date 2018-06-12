@@ -1,4 +1,4 @@
-package com.stosik.parking;
+package com.stosik;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.Banner;
