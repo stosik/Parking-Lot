@@ -11,6 +11,23 @@ public class RegularEvaluator implements Evaluator
     @Override
     public Double calculateReservationCost(Reservation reservation)
     {
-        return 0.0;
+        int hours = hoursDifference(reservation.getStartTime(), reservation.getStopTime()) + 1;
+        
+        switch(hours)
+        {
+            case 1:
+                return FIRST_HOUR_COST;
+            case 2:
+                return FIRST_HOUR_COST + SECOND_HOUR_COST;
+            default:
+                return FIRST_HOUR_COST +
+                       SECOND_HOUR_COST +
+                       countEachNextHour(SECOND_HOUR_COST, 2, hours);
+        }
+    }
+    
+    private double countEachNextHour(double result, int actualHour, int reservationHours)
+    {
+        return actualHour == reservationHours ? result : countEachNextHour(CONVERSION_RATE * result, ++actualHour, reservationHours);
     }
 }

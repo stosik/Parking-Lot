@@ -55,6 +55,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile "org.projectlombok:lombok:$lombok"
 	compile('com.google.code.findbugs:jsr305:3.0.0')
+	compile('org.apache.commons:commons-lang3:3.7')
 
 	runtime('com.h2database:h2')
 
