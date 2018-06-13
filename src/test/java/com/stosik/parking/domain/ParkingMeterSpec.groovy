@@ -8,9 +8,7 @@ class ParkingMeterSpec extends Specification
     {
         given:
 
-
-
-        ParkingMeter parkingMeter = new ParkingMeter()
+        def parkingMeter = new ParkingMeter()
 
         when:
 
@@ -18,7 +16,6 @@ class ParkingMeterSpec extends Specification
 
         then:
 
-        println(reservation.getStartTime())
         reservation.id == 1L
     }
 
@@ -26,7 +23,7 @@ class ParkingMeterSpec extends Specification
     {
         given:
 
-        ParkingMeter parkingMeter = new ParkingMeter()
+        def parkingMeter = new ParkingMeter()
 
         when:
 

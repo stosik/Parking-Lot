@@ -8,7 +8,10 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Date;
@@ -19,7 +22,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-class Reservation
+public class Reservation
 {
     @Id
     private Long id;
@@ -31,6 +34,10 @@ class Reservation
     @Temporal(TemporalType.TIME)
     @CreatedDate
     private Date stopTime;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "driver_id")
+    Driver driver;
     
     private Double cost;
 }
