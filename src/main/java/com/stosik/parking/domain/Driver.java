@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -40,6 +41,6 @@ class Driver
     @Column(nullable = false)
     private String lastName;
     
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
-    private Reservation reservation;
+    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL)
+    private Set<Reservation> reservation;
 }

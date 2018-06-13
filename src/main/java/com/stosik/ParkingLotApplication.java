@@ -16,7 +16,7 @@ public class ParkingLotApplication
             .headless(true)
             .application()
             .run(args);
-        
-        log.info("http:\\/localhost:8080");
+    
+        log.info("\nhttp://localhost:8081/\n");
     }
 }
