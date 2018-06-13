@@ -1,5 +1,6 @@
 package com.stosik.parking.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,17 +17,20 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 class Reservation
 {
     @Id
-    Long id;
+    private Long id;
     
     @Temporal(TemporalType.TIME)
     @CreatedDate
-    Date startTime;
+    private Date startTime;
     
     @Temporal(TemporalType.TIME)
     @CreatedDate
-    Date stopTime;
+    private Date stopTime;
+    
+    private Double cost;
 }
