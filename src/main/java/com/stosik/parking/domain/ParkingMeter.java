@@ -1,6 +1,6 @@
 package com.stosik.parking.domain;
 
-public class ParkingMeter
+public class ParkingMeter implements Meter
 {
     ReservationRepository reservationRepository;
     
@@ -11,6 +11,6 @@ public class ParkingMeter
     
     public void stopReservation(Reservation reservation)
     {
-        
+    
     }
 }
