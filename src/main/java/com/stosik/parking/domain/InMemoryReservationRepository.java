@@ -38,6 +38,7 @@ public class InMemoryReservationRepository implements ReservationRepository
             .findAll(pageable)
             .getContent()
             .stream()
+            .filter(this::hasEnded)
             .filter(reservation -> startsIn(reservation, day))
             .filter(reservation -> endsIn(reservation, day))
             .collect(Collectors.toList());
@@ -47,6 +48,11 @@ public class InMemoryReservationRepository implements ReservationRepository
     public Page<Reservation> findAll(Pageable pageable)
     {
         return new PageImpl<>(new ArrayList<>(map.values()), pageable, map.size());
+    }
+    
+    private boolean hasEnded(Reservation reservation)
+    {
+        return reservation.getStartTime() != null && reservation.getStopTime() != null;
     }
     
     private boolean startsIn(Reservation reservation, Date day)

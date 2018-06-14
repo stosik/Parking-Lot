@@ -2,6 +2,7 @@ package com.stosik.parking;
 
 import com.stosik.parking.domain.Reservation;
 import com.stosik.parking.domain.ReservationFacade;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,9 +18,9 @@ public class ParkingController
     private ReservationFacade reservationFacade;
     
     @GetMapping("/owner/earnings")
-    public double retrieveDailyTakings(@RequestParam Date specificDay)
+    public double retrieveDailyTakings(Pageable pageable, @RequestParam Date specificDay)
     {
-        return reservationFacade.dailyTakings(specificDay);
+        return reservationFacade.dailyTakings(pageable, specificDay);
     }
     
     @GetMapping("/driver/reservation")
