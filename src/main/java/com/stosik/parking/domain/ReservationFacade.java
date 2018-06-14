@@ -1,9 +1,17 @@
 package com.stosik.parking.domain;
 
+import lombok.RequiredArgsConstructor;
+
+import javax.transaction.Transactional;
 import java.util.Date;
 
+@Transactional
+@RequiredArgsConstructor
 public class ReservationFacade
 {
+    private final ReservationRepository reservationRepository;
+    private final CarRepository carRepository;
+    
     public double dailyTakings(Date day)
     {
         
@@ -17,16 +25,26 @@ public class ReservationFacade
     
     public void startParkmeter()
     {
-    
+        Reservation reservation = Reservation
+            .builder()
+            .id(1L)
+            .startTime(new Date())
+            .build();
+        
+        reservationRepository.save(reservation);
     }
     
-    public void stopParkmeter()
+    public void stopParkmeter(Reservation reservation)
     {
-    
+        Reservation detached = reservationRepository.findById(reservation.getId());
+        detached.setStopTime(new Date());
+        
+        reservationRepository.save(detached);
     }
     
-    public boolean checkVehicle()
+    public boolean checkVehicle(Long id)
     {
+        
         return false;
     }
 }

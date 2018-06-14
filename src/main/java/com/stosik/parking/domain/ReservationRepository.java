@@ -10,7 +10,7 @@ import java.util.List;
 
 interface ReservationRepository extends Repository<Reservation, Long>
 {
-    Reservation save(Reservation film);
+    Reservation save(Reservation reservation);
     
     Reservation findById(Long id);
     
@@ -20,11 +20,11 @@ interface ReservationRepository extends Repository<Reservation, Long>
     
     default Reservation findOneOrThrow(Long id)
     {
-        Reservation film = findById(id);
-        if(film == null)
+        Reservation reservation = findById(id);
+        if(reservation == null)
         {
             throw new ReservationNotFoundException(id);
         }
-        return film;
+        return reservation;
     }
 }

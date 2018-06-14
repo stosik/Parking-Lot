@@ -1,5 +1,6 @@
 package com.stosik.parking;
 
+import com.stosik.parking.domain.Reservation;
 import com.stosik.parking.domain.ReservationFacade;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,9 +29,9 @@ public class ParkingController
     }
     
     @GetMapping("/operator/car/{id}")
-    public boolean checkIfParkmeterStarted()
+    public boolean checkIfParkmeterStarted(Long id)
     {
-        return reservationFacade.checkVehicle();
+        return reservationFacade.checkVehicle(id);
     }
     
     @PostMapping("/driver/start")
@@ -40,8 +41,8 @@ public class ParkingController
     }
     
     @PostMapping("/driver/stop")
-    public void stopParkmeter()
+    public void stopParkmeter(Reservation reservation)
     {
-        reservationFacade.stopParkmeter();
+        reservationFacade.stopParkmeter(reservation);
     }
 }

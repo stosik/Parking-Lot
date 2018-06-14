@@ -1,5 +1,6 @@
 package com.stosik.parking.domain.evaluator;
 
+import com.stosik.parking.domain.DriverType;
 import com.stosik.parking.domain.Reservation;
 import com.stosik.util.DateUtils;
 
@@ -8,6 +9,12 @@ public class VipEvaluator implements Evaluator
     private static final Double FIRST_HOUR_COST = 0.0;
     private static final Double SECOND_HOUR_COST = 2.0;
     private static final Double CONVERSION_RATE = 1.2;
+    
+    @Override
+    public boolean isAppropriateFor(DriverType driverType)
+    {
+        return driverType == DriverType.VIP;
+    }
     
     @Override
     public double calculateReservationCost(Reservation reservation)

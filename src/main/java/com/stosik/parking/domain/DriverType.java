@@ -1,6 +1,6 @@
 package com.stosik.parking.domain;
 
-enum DriverType
+public enum DriverType
 {
     REGULAR,
     VIP
