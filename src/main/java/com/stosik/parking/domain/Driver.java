@@ -24,7 +24,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(exclude = "reservation")
+@EqualsAndHashCode(exclude = "reservations")
 @Table(name = "drivers")
 class Driver
 {
@@ -46,5 +46,5 @@ class Driver
     private Car car;
     
     @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL)
-    private Set<Reservation> reservation;
+    private Set<Reservation> reservations;
 }

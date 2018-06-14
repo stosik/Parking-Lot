@@ -14,7 +14,6 @@ public class ReservationFacade
     
     public double dailyTakings(Date day)
     {
-        
         return 0.0;
     }
     
@@ -44,7 +43,16 @@ public class ReservationFacade
     
     public boolean checkVehicle(Long id)
     {
-        
-        return false;
+        return carRepository
+            .findById(id)
+            .getDriver()
+            .getReservations()
+            .stream()
+            .anyMatch(this::hasOnlyStartDate);
+    }
+    
+    private boolean hasOnlyStartDate(Reservation reservation)
+    {
+        return reservation.getStartTime() != null && reservation.getStopTime() == null;
     }
 }
