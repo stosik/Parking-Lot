@@ -31,7 +31,7 @@ class RegularEvaluatorSpec extends Specification
 
         then:
 
-        costOfReservation == 1.0
+        costOfReservation == 1.0d
     }
 
     void "should evaluate price for first two hours for regular driver"()
@@ -47,7 +47,7 @@ class RegularEvaluatorSpec extends Specification
 
         then:
 
-        costOfReservation == 3.0
+        costOfReservation == 3.0d
     }
 
     void "should evaluate price for 2+ hours for regular driver"()
@@ -63,6 +63,6 @@ class RegularEvaluatorSpec extends Specification
 
         then:
 
-        costOfReservation == 6.0
+        costOfReservation == 6.0d
     }
 }

@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
@@ -40,6 +41,9 @@ class Driver
     @NotNull
     @Column(nullable = false)
     private String lastName;
+    
+    @OneToOne(mappedBy = "driver")
+    private Car car;
     
     @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL)
     private Set<Reservation> reservation;

@@ -31,7 +31,7 @@ class VipEvaluatorSpec extends Specification
 
         then:
 
-        costOfReservation == 0.0
+        costOfReservation == 0.0d
     }
 
     void "should evaluate price for first two hours for vip driver"()
@@ -47,7 +47,7 @@ class VipEvaluatorSpec extends Specification
 
         then:
 
-        costOfReservation == 2.0
+        costOfReservation == 2.0d
     }
 
     void "should evaluate price for given hours for vip driver"()
@@ -63,6 +63,6 @@ class VipEvaluatorSpec extends Specification
 
         then:
 
-        costOfReservation == 4.4
+        costOfReservation == 4.4d
     }
 }

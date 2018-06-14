@@ -11,7 +11,7 @@ public class PriceDefiner
         this.evaluator = evaluator;
     }
     
-    public Double evaluateTimeToRate(Reservation reservation)
+    public double evaluateTimeToRate(Reservation reservation)
     {
         return evaluator.calculateReservationCost(reservation);
     }

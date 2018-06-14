@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 @Getter
@@ -15,8 +16,11 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-class Vehicle
+class Car
 {
     @Id
-    Long id;
+    Long plateId;
+    
+    @OneToOne
+    Driver driver;
 }

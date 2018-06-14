@@ -1,11 +1,15 @@
 package com.stosik.parking.domain;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
@@ -28,8 +32,30 @@ public class InMemoryReservationRepository implements ReservationRepository
     }
     
     @Override
+    public List<Reservation> findWithParticularDayAndMonth(Pageable pageable, Date day)
+    {
+        return this
+            .findAll(pageable)
+            .getContent()
+            .stream()
+            .filter(reservation -> startsIn(reservation, day))
+            .filter(reservation -> endsIn(reservation, day))
+            .collect(Collectors.toList());
+    }
+    
+    @Override
     public Page<Reservation> findAll(Pageable pageable)
     {
         return new PageImpl<>(new ArrayList<>(map.values()), pageable, map.size());
+    }
+    
+    private boolean startsIn(Reservation reservation, Date day)
+    {
+        return DateUtils.isSameDay(reservation.getStartTime(), day);
+    }
+    
+    private boolean endsIn(Reservation reservation, Date day)
+    {
+        return DateUtils.isSameDay(reservation.getStopTime(), day);
     }
 }

@@ -1,6 +1,7 @@
 package com.stosik.parking.domain.evaluator;
 
 import com.stosik.parking.domain.Reservation;
+import com.stosik.util.DateUtils;
 
 public class RegularEvaluator implements Evaluator
 {
@@ -9,9 +10,9 @@ public class RegularEvaluator implements Evaluator
     private static final Double CONVERSION_RATE = 1.5;
     
     @Override
-    public Double calculateReservationCost(Reservation reservation)
+    public double calculateReservationCost(Reservation reservation)
     {
-        int hours = hoursDifference(reservation.getStartTime(), reservation.getStopTime()) + 1;
+        int hours = DateUtils.hoursDifference(reservation.getStartTime(), reservation.getStopTime()) + 1;
         
         switch(hours)
         {

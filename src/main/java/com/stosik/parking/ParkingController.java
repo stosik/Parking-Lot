@@ -1,5 +1,6 @@
 package com.stosik.parking;
 
+import com.stosik.parking.domain.ReservationFacade;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,33 +13,35 @@ import java.util.Date;
 @RequestMapping("/parking")
 public class ParkingController
 {
-    @GetMapping("/owner/earnings")
-    public void retrieveDailyTakings(@RequestParam Date specificDay)
-    {
+    private ReservationFacade reservationFacade;
     
+    @GetMapping("/owner/earnings")
+    public double retrieveDailyTakings(@RequestParam Date specificDay)
+    {
+        return reservationFacade.dailyTakings(specificDay);
     }
     
     @GetMapping("/driver/reservation")
-    public void checkHowMuchToPay()
+    public double rentalCost()
     {
-    
+        return reservationFacade.dispendReservationTicket();
     }
     
     @GetMapping("/operator/car/{id}")
-    public void checkIfStartedParkmeter()
+    public boolean checkIfParkmeterStarted()
     {
-    
+        return reservationFacade.checkVehicle();
     }
     
     @PostMapping("/driver/start")
     public void startParkmeter()
     {
-    
+        reservationFacade.startParkmeter();
     }
     
     @PostMapping("/driver/stop")
     public void stopParkmeter()
     {
-    
+        reservationFacade.stopParkmeter();
     }
 }

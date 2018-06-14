@@ -6,11 +6,5 @@ import java.util.Date;
 
 public interface Evaluator
 {
-    Double calculateReservationCost(Reservation reservation);
-    
-    default int hoursDifference(Date startTime, Date stopTime)
-    {
-        final int MILLI_TO_HOUR = 1000 * 60 * 60;
-        return (int) (stopTime.getTime() - startTime.getTime()) / MILLI_TO_HOUR;
-    }
+    double calculateReservationCost(Reservation reservation);
 }
