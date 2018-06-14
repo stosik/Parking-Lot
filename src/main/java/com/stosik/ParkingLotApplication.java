@@ -17,6 +17,6 @@ public class ParkingLotApplication
             .application()
             .run(args);
     
-        log.info("\nhttp://localhost:8081/\n");
+        log.info("\nhttp://localhost:8080/\n");
     }
 }

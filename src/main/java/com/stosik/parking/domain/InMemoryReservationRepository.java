@@ -32,15 +32,13 @@ public class InMemoryReservationRepository implements ReservationRepository
     }
     
     @Override
-    public List<Reservation> findWithParticularDayAndMonth(Pageable pageable, Date day)
+    public List<Reservation> findByDate(Pageable pageable, int year, int month, int day)
     {
         return this
             .findAll(pageable)
             .getContent()
             .stream()
             .filter(this::hasEnded)
-            .filter(reservation -> startsIn(reservation, day))
-            .filter(reservation -> endsIn(reservation, day))
             .collect(Collectors.toList());
     }
     
@@ -53,15 +51,5 @@ public class InMemoryReservationRepository implements ReservationRepository
     private boolean hasEnded(Reservation reservation)
     {
         return reservation.getStartTime() != null && reservation.getStopTime() != null;
-    }
-    
-    private boolean startsIn(Reservation reservation, Date day)
-    {
-        return DateUtils.isSameDay(reservation.getStartTime(), day);
-    }
-    
-    private boolean endsIn(Reservation reservation, Date day)
-    {
-        return DateUtils.isSameDay(reservation.getStopTime(), day);
     }
 }

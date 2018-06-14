@@ -1,9 +1,11 @@
 package com.stosik.parking.domain;
 
 import com.stosik.parking.domain.evaluator.Evaluator;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
@@ -41,8 +43,11 @@ public class ReservationFacade
     
     public double dailyTakings(Pageable pageable, Date day)
     {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(day);
+        
         return reservationRepository
-            .findWithParticularDayAndMonth(pageable, day)
+            .findByDate(pageable, cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR))
             .stream()
             .map(this::calculateCost)
             .reduce(0.0, Double::sum);
@@ -68,9 +73,11 @@ public class ReservationFacade
      */
     private double calculateCost(Reservation reservation)
     {
+        DriverType driverType = reservation.getDriver().getType();
+        
         return evaluators
             .stream()
-            .filter(evaluator -> evaluator.isAppropriateFor(reservation.getDriver().getType()))
+            .filter(evaluator -> evaluator.isAppropriateFor(driverType))
             .map(evaluator -> evaluator.calculateReservationCost(reservation))
             .mapToDouble(Double::doubleValue)
             .sum();

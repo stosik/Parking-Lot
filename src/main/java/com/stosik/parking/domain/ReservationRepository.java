@@ -3,7 +3,9 @@ package com.stosik.parking.domain;
 import com.stosik.parking.dto.ReservationNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -14,7 +16,8 @@ interface ReservationRepository extends Repository<Reservation, Long>
     
     Reservation findById(Long id);
     
-    List<Reservation> findWithParticularDayAndMonth(Pageable pageable, Date day);
+    @Query("select r from Reservation r where year(r.stopTime) = ?2 and month(r.stopTime) = ?3 and day(r.stopTime) = ?4")
+    List<Reservation> findByDate(Pageable pageable, int year, int month, int day);
     
     Page<Reservation> findAll(Pageable pageable);
     
