@@ -32,9 +32,9 @@ public class ReservationFacade
         return reservationRepository.save(reservation);
     }
     
-    public void stopParkmeter(Reservation reservation)
+    public Reservation stopParkmeter(Long id)
     {
-    
+        return parkingMeter.stopReservation(reservationRepository.findById(id));
     }
     
     public double dailyTakings(Pageable pageable, Date day)
@@ -49,9 +49,11 @@ public class ReservationFacade
             .reduce(0.0, Double::sum);
     }
     
-    public double dispendReservationTicket()
+    public double dispendReservationTicket(Long id)
     {
-        return 0.0;
+        return reservationRepository
+            .findById(id)
+            .getCost();
     }
     
     public boolean checkVehicle(Long id)

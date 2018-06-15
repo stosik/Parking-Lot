@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.Singular;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -45,6 +46,7 @@ public class Driver
     @OneToOne(mappedBy = "driver")
     private Car car;
     
+    @Singular
     @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL)
     private Set<Reservation> reservations;
 }

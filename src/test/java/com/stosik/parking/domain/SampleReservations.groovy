@@ -39,6 +39,8 @@ trait SampleReservations implements SampleDrivers
         null
     )
 
+    Car mondeo = createCar(1L)
+
     static private Reservation createReservation(Long id, Driver driver, Date start, Date stop)
     {
         return Reservation
@@ -56,6 +58,15 @@ trait SampleReservations implements SampleDrivers
             .builder()
             .id(id)
             .type(type)
+            .build()
+    }
+
+    static private Car createCar(Long id)
+    {
+        return Car
+            .builder()
+            .id(id)
+            .driver(createDriver(3L, DriverType.REGULAR))
             .build()
     }
 }

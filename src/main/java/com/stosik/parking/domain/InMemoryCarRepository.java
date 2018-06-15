@@ -12,7 +12,7 @@ public class InMemoryCarRepository implements CarRepository
     public Car save(Car car)
     {
         requireNonNull(car);
-        map.put(car.getPlateId(), car);
+        map.put(car.getId(), car);
         
         return car;
     }

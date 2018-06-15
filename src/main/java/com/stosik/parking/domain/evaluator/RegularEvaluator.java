@@ -3,7 +3,9 @@ package com.stosik.parking.domain.evaluator;
 import com.stosik.parking.domain.DriverType;
 import com.stosik.parking.domain.Reservation;
 import com.stosik.util.DateUtils;
+import org.springframework.stereotype.Service;
 
+@Service
 public class RegularEvaluator implements Evaluator
 {
     private static final Double FIRST_HOUR_COST = 1.0;

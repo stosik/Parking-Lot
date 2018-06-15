@@ -18,7 +18,6 @@ public class ParkingMeter implements Meter
     
     public Reservation stopReservation(Reservation reservation)
     {
-        reservation.setId(1L);
         reservation.setStopTime(new Date());
         
         return reservation;

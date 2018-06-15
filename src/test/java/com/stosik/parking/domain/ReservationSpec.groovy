@@ -1,5 +1,8 @@
 package com.stosik.parking.domain
 
+import com.stosik.parking.domain.evaluator.Evaluator
+import com.stosik.parking.domain.evaluator.RegularEvaluator
+import com.stosik.parking.domain.evaluator.VipEvaluator
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import spock.lang.Shared
@@ -14,7 +17,9 @@ class ReservationSpec extends Specification implements SampleReservations
 
     Meter parkingMeter = Mock()
 
-    def reservationFacade = new ReservationConfiguration().reservationFacade(new InMemoryReservationRepository(), new InMemoryCarRepository(), parkingMeter)
+    Set<Evaluator> evaluators = new HashSet<>(Arrays.asList(new VipEvaluator(), new RegularEvaluator()))
+
+    def reservationFacade = new ReservationConfiguration().reservationFacade(new InMemoryReservationRepository(), new InMemoryCarRepository(), evaluators, parkingMeter)
 
     def "should list reservation in system"()
     {
@@ -82,9 +87,39 @@ class ReservationSpec extends Specification implements SampleReservations
     def "should check whether driver's car has started park meter"()
     {
         given: "driver started park meter for his car"
+        InMemoryCarRepository carRepository = Mock()
+        reservationFacade = new ReservationConfiguration().reservationFacade(Mock(InMemoryReservationRepository), carRepository, evaluators, parkingMeter)
+        def driver = Mock(Driver)
+        def car = Mock(Car)
+
+        carRepository.findById(_) >> car
+        car.getDriver() >> driver
+        driver.getReservations() >> Collections.singleton(fifthReservation)
 
         when: "operator checks car"
+        def startedParkmeter = reservationFacade.checkVehicle(mondeo.id)
 
-        then: "system return response"
+        then: "system return response that there is parked car"
+        startedParkmeter
+    }
+
+    def "should check driver's car has started park meter"()
+    {
+        given: "driver started park meter for his car"
+        InMemoryCarRepository carRepository = Mock()
+        reservationFacade = new ReservationConfiguration().reservationFacade(Mock(InMemoryReservationRepository), carRepository, evaluators, parkingMeter)
+
+        def driver = Mock(Driver)
+        def car = Mock(Car)
+
+        carRepository.findById(_) >> car
+        car.getDriver() >> driver
+        driver.getReservations() >> Collections.singleton(fifthReservation)
+
+        when: "operator checks car"
+        def startedParkmeter = reservationFacade.checkVehicle(mondeo.id)
+
+        then: "system return response that car has not started park meter"
+        startedParkmeter
     }
 }

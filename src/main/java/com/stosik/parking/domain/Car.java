@@ -20,7 +20,7 @@ import javax.persistence.OneToOne;
 class Car
 {
     @Id
-    Long plateId;
+    Long id;
     
     @OneToOne(fetch = FetchType.LAZY)
     Driver driver;
