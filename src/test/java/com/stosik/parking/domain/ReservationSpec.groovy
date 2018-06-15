@@ -114,12 +114,12 @@ class ReservationSpec extends Specification implements SampleReservations
 
         carRepository.findById(_) >> car
         car.getDriver() >> driver
-        driver.getReservations() >> Collections.singleton(fifthReservation)
+        driver.getReservations() >> Collections.singleton(firstEndedReservation)
 
         when: "operator checks car"
         def startedParkmeter = reservationFacade.checkVehicle(mondeo.id)
 
         then: "system return response that car has not started park meter"
-        startedParkmeter
+        !startedParkmeter
     }
 }

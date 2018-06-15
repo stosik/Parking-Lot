@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
 @Getter
@@ -17,10 +18,15 @@ import javax.persistence.OneToOne;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "cars")
 class Car
 {
     @Id
     Long id;
+    
+    String brand;
+    
+    String model;
     
     @OneToOne(fetch = FetchType.LAZY)
     Driver driver;

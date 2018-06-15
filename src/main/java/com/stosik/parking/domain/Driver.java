@@ -11,6 +11,7 @@ import lombok.Singular;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -25,14 +26,15 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(exclude = "reservations")
+@EqualsAndHashCode(exclude = {"reservations", "car"})
 @Table(name = "drivers")
 public class Driver
 {
     @Id
     private Long id;
     
-    @Enumerated
+    @NotNull
+    @Enumerated(EnumType.STRING)
     private DriverType type;
     
     @NotNull
