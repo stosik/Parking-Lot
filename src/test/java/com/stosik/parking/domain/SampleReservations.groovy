@@ -1,23 +1,61 @@
 package com.stosik.parking.domain
 
-import groovy.transform.CompileStatic
-
 import java.text.SimpleDateFormat
 
-@CompileStatic
-trait SampleReservations
+trait SampleReservations implements SampleDrivers
 {
-    Reservation reservation1 = createReservation(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 00:55:00"),
-                                                 new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 01:55:00"))
-    Reservation reservation2 = createReservation(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 00:55:00"),
-                                                 new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 02:55:00"))
+    Reservation firstEndedReservation = createReservation(
+        1L,
+        createDriver(1L, DriverType.REGULAR),
+        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 00:55:00"),
+        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 01:55:00")
+    )
 
-    static private Reservation createReservation(Date start, Date stop)
+    Reservation secondEndedReservation = createReservation(
+        2L,
+        createDriver(2L, DriverType.VIP),
+        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 00:55:00"),
+        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 02:55:00")
+    )
+
+    Reservation thirdEndedReservation = createReservation(
+        3L,
+        createDriver(3L, DriverType.REGULAR),
+        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 00:55:00"),
+        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-02 02:55:00")
+    )
+
+    Reservation fourthReservation = createReservation(
+        4L,
+        createDriver(3L, DriverType.REGULAR),
+        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 00:55:00"),
+        null
+    )
+
+    Reservation fifthReservation = createReservation(
+        5L,
+        createDriver(3L, DriverType.REGULAR),
+        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 00:55:00"),
+        null
+    )
+
+    static private Reservation createReservation(Long id, Driver driver, Date start, Date stop)
     {
         return Reservation
             .builder()
+            .id(id)
+            .driver(driver)
             .startTime(start)
             .stopTime(stop)
+            .build()
+    }
+
+    static private Driver createDriver(Long id, DriverType type)
+    {
+        return Driver
+            .builder()
+            .id(id)
+            .type(type)
             .build()
     }
 }

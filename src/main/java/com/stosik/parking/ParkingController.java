@@ -1,5 +1,6 @@
 package com.stosik.parking;
 
+import com.stosik.parking.domain.Driver;
 import com.stosik.parking.domain.Reservation;
 import com.stosik.parking.domain.ReservationFacade;
 import org.springframework.data.domain.Pageable;
@@ -36,9 +37,9 @@ public class ParkingController
     }
     
     @PostMapping("/driver/start")
-    public void startParkmeter()
+    public Reservation startParkmeter(Driver driver)
     {
-        reservationFacade.startParkmeter();
+       return reservationFacade.startParkmeter(driver);
     }
     
     @PostMapping("/driver/stop")

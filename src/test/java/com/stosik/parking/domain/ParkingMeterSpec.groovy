@@ -2,7 +2,7 @@ package com.stosik.parking.domain
 
 import spock.lang.Specification
 
-class ParkingMeterSpec extends Specification
+class ParkingMeterSpec extends Specification implements SampleDrivers
 {
     def "should start parking meter successfully"()
     {
@@ -12,7 +12,7 @@ class ParkingMeterSpec extends Specification
 
         when:
 
-        def reservation = parkingMeter.startReservation(new Reservation())
+        def reservation = parkingMeter.startReservation(szymon)
 
         then:
 

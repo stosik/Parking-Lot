@@ -1,7 +1,7 @@
 package com.stosik.parking.domain;
 
 import com.stosik.parking.domain.evaluator.Evaluator;
-import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
@@ -25,15 +25,11 @@ public class ReservationFacade
         this.parkingMeter = parkingMeter;
     }
     
-    public void startParkmeter()
+    public Reservation startParkmeter(Driver driver)
     {
-        Reservation reservation = Reservation
-            .builder()
-            .id(1L)
-            .startTime(new Date())
-            .build();
+        Reservation reservation = parkingMeter.startReservation(driver);
         
-        reservationRepository.save(reservation);
+        return reservationRepository.save(reservation);
     }
     
     public void stopParkmeter(Reservation reservation)
@@ -66,6 +62,11 @@ public class ReservationFacade
             .getReservations()
             .stream()
             .anyMatch(this::hasOnlyStartDate);
+    }
+    
+    public Page<Reservation> showAll(Pageable pageable)
+    {
+        return reservationRepository.findAll(pageable);
     }
     
     /*

@@ -26,7 +26,7 @@ import java.util.Set;
 @Builder
 @EqualsAndHashCode(exclude = "reservations")
 @Table(name = "drivers")
-class Driver
+public class Driver
 {
     @Id
     private Long id;

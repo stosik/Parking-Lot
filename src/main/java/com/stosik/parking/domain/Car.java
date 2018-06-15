@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
@@ -21,6 +22,6 @@ class Car
     @Id
     Long plateId;
     
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     Driver driver;
 }

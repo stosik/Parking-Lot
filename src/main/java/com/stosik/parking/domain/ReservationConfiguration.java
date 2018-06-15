@@ -14,16 +14,11 @@ import java.util.Set;
 @Configuration
 class ReservationConfiguration
 {
-    ReservationFacade reservationFacade()
-    {
-        return reservationFacade(new InMemoryReservationRepository(), new InMemoryCarRepository());
-    }
-    
     @Bean
-    ReservationFacade reservationFacade(ReservationRepository filmRepository, CarRepository carRepository)
+    ReservationFacade reservationFacade(ReservationRepository filmRepository, CarRepository carRepository, Meter parkingMeter)
     {
         Set<Evaluator> evaluators = new HashSet<>(Arrays.asList(new VipEvaluator(), new RegularEvaluator()));
         
-        return new ReservationFacade(filmRepository, carRepository, Collections.unmodifiableSet(evaluators), new ParkingMeter());
+        return new ReservationFacade(filmRepository, carRepository, Collections.unmodifiableSet(evaluators), parkingMeter);
     }
 }
