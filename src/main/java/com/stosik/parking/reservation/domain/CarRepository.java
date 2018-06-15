@@ -1,8 +1,8 @@
-package com.stosik.parking.domain;
+package com.stosik.parking.reservation.domain;
 
 import org.springframework.data.repository.Repository;
 
-public interface CarRepository extends Repository<Car, Long>
+interface CarRepository extends Repository<Car, Long>
 {
     Car save(Car reservation);
     

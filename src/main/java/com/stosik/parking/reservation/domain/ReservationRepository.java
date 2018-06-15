@@ -1,13 +1,11 @@
-package com.stosik.parking.domain;
+package com.stosik.parking.reservation.domain;
 
-import com.stosik.parking.dto.ReservationNotFoundException;
+import com.stosik.parking.reservation.dto.ReservationNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
-import org.springframework.data.repository.query.Param;
 
-import java.util.Date;
 import java.util.List;
 
 interface ReservationRepository extends Repository<Reservation, Long>

@@ -1,4 +1,4 @@
-package com.stosik.parking.domain;
+package com.stosik.parking.reservation.domain;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
-public class InMemoryReservationRepository implements ReservationRepository
+class InMemoryReservationRepository implements ReservationRepository
 {
     private ConcurrentHashMap<Long, Reservation> map = new ConcurrentHashMap<>();
     

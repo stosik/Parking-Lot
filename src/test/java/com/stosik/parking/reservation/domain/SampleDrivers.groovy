@@ -1,4 +1,4 @@
-package com.stosik.parking.domain
+package com.stosik.parking.reservation.domain
 
 trait SampleDrivers
 {

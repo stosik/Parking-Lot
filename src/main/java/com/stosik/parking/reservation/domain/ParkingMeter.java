@@ -1,11 +1,11 @@
-package com.stosik.parking.domain;
+package com.stosik.parking.reservation.domain;
 
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 @Service
-public class ParkingMeter implements Meter
+class ParkingMeter implements Meter
 {
     public Reservation startReservation(Driver driver)
     {

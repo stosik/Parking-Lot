@@ -1,4 +1,4 @@
-package com.stosik.parking.domain;
+package com.stosik.parking.reservation.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,9 +8,12 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -19,13 +22,16 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Builder
 @Table(name = "cars")
-class Car
+public class Car
 {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
     
+    @NotNull
     String brand;
     
+    @NotNull
     String model;
     
     @OneToOne(fetch = FetchType.LAZY)

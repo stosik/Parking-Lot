@@ -1,13 +1,13 @@
-package com.stosik.parking.domain.evaluator
+package com.stosik.parking.reservation.domain.evaluator
 
-import com.stosik.parking.domain.Reservation
+import com.stosik.parking.reservation.domain.Reservation
 import org.apache.commons.lang3.time.DateUtils
 import spock.lang.Shared
 import spock.lang.Specification
 
 import java.text.SimpleDateFormat
 
-class RegularEvaluatorSpec extends Specification
+class VipEvaluatorSpec extends Specification
 {
     @Shared
     Date startTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 00:00:00")
@@ -15,10 +15,10 @@ class RegularEvaluatorSpec extends Specification
     @Shared
     Date stopTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 00:55:00")
 
-    Evaluator regularEvaluator = new RegularEvaluator()
+    Evaluator vipEvaluator = new VipEvaluator()
     Reservation reservation = Mock()
 
-    void "should evaluate price only for first hour for regular driver"()
+    void "should evaluate price only for first hour for vip driver"()
     {
         given:
 
@@ -27,14 +27,14 @@ class RegularEvaluatorSpec extends Specification
 
         when:
 
-        def costOfReservation = regularEvaluator.calculateReservationCost(reservation)
+        def costOfReservation = vipEvaluator.calculateReservationCost(reservation)
 
         then:
 
-        costOfReservation == 1.0d
+        costOfReservation == 0.0d
     }
 
-    void "should evaluate price for first two hours for regular driver"()
+    void "should evaluate price for first two hours for vip driver"()
     {
         given:
 
@@ -43,14 +43,14 @@ class RegularEvaluatorSpec extends Specification
 
         when:
 
-        def costOfReservation = regularEvaluator.calculateReservationCost(reservation)
+        def costOfReservation = vipEvaluator.calculateReservationCost(reservation)
 
         then:
 
-        costOfReservation == 3.0d
+        costOfReservation == 2.0d
     }
 
-    void "should evaluate price for 2+ hours for regular driver"()
+    void "should evaluate price for given hours for vip driver"()
     {
         given:
 
@@ -59,10 +59,10 @@ class RegularEvaluatorSpec extends Specification
 
         when:
 
-        def costOfReservation = regularEvaluator.calculateReservationCost(reservation)
+        def costOfReservation = vipEvaluator.calculateReservationCost(reservation)
 
         then:
 
-        costOfReservation == 6.0d
+        costOfReservation == 4.4d
     }
 }

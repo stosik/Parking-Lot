@@ -1,13 +1,14 @@
 package com.stosik.parking;
 
-import com.stosik.parking.domain.Driver;
-import com.stosik.parking.domain.Reservation;
-import com.stosik.parking.domain.ReservationFacade;
+import com.stosik.parking.reservation.domain.Driver;
+import com.stosik.parking.reservation.domain.Reservation;
+import com.stosik.parking.reservation.domain.ReservationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +18,7 @@ import java.util.Date;
 @RestController
 @RequestMapping("/parking")
 @RequiredArgsConstructor
-public class ParkingController
+class ParkingController
 {
     private final ReservationFacade reservationFacade;
     
@@ -34,13 +35,13 @@ public class ParkingController
     }
     
     @GetMapping("/operator/cars/{id}")
-    public boolean checkIfParkmeterStarted(Long id)
+    public boolean checkIfParkmeterStarted(@PathVariable Long id)
     {
         return reservationFacade.checkVehicle(id);
     }
     
     @PostMapping("/driver/start")
-    public Reservation startParkmeter(Driver driver)
+    public Reservation startParkmeter(@RequestBody Driver driver)
     {
         return reservationFacade.startParkmeter(driver);
     }

@@ -1,6 +1,6 @@
-package com.stosik.parking.domain;
+package com.stosik.parking.reservation.domain;
 
-public interface Meter
+interface Meter
 {
     Reservation startReservation(Driver driver);
     

@@ -1,8 +1,8 @@
-package com.stosik.parking.domain
+package com.stosik.parking.reservation.domain
 
 import java.text.SimpleDateFormat
 
-trait SampleReservations implements SampleDrivers
+trait SampleReservations
 {
     Reservation firstEndedReservation = createReservation(
         1L,

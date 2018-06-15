@@ -1,21 +1,21 @@
-package com.stosik.parking.domain.evaluator;
+package com.stosik.parking.reservation.domain.evaluator;
 
-import com.stosik.parking.domain.DriverType;
-import com.stosik.parking.domain.Reservation;
+import com.stosik.parking.reservation.domain.DriverType;
+import com.stosik.parking.reservation.domain.Reservation;
 import com.stosik.util.DateUtils;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RegularEvaluator implements Evaluator
+public class VipEvaluator implements Evaluator
 {
-    private static final Double FIRST_HOUR_COST = 1.0;
+    private static final Double FIRST_HOUR_COST = 0.0;
     private static final Double SECOND_HOUR_COST = 2.0;
-    private static final Double CONVERSION_RATE = 1.5;
+    private static final Double CONVERSION_RATE = 1.2;
     
     @Override
     public boolean isAppropriateFor(DriverType driverType)
     {
-        return driverType == DriverType.REGULAR;
+        return driverType == DriverType.VIP;
     }
     
     @Override
@@ -36,8 +36,8 @@ public class RegularEvaluator implements Evaluator
         }
     }
     
-    private double countEachNextHour(double result, int actualHour, int reservationHours)
+    private double countEachNextHour(double result, int hour, int reservationHours)
     {
-        return actualHour == reservationHours ? result : countEachNextHour(CONVERSION_RATE * result, ++actualHour, reservationHours);
+        return hour == reservationHours ? result : countEachNextHour(CONVERSION_RATE * result, ++hour, reservationHours);
     }
 }

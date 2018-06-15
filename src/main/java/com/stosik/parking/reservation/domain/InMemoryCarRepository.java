@@ -1,10 +1,10 @@
-package com.stosik.parking.domain;
+package com.stosik.parking.reservation.domain;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Objects.requireNonNull;
 
-public class InMemoryCarRepository implements CarRepository
+class InMemoryCarRepository implements CarRepository
 {
     private ConcurrentHashMap<Long, Car> map = new ConcurrentHashMap<>();
     

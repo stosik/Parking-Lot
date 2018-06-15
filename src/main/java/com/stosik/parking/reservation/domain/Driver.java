@@ -1,4 +1,4 @@
-package com.stosik.parking.domain;
+package com.stosik.parking.reservation.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +13,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -31,6 +33,7 @@ import java.util.Set;
 public class Driver
 {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
     @NotNull

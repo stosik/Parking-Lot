@@ -1,6 +1,6 @@
-package com.stosik.parking.domain;
+package com.stosik.parking.reservation.domain;
 
-import com.stosik.parking.domain.evaluator.Evaluator;
+import com.stosik.parking.reservation.domain.evaluator.Evaluator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
