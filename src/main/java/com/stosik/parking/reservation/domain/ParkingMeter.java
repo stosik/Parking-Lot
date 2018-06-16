@@ -4,6 +4,7 @@ import com.stosik.parking.reservation.domain.model.Driver;
 import com.stosik.parking.reservation.domain.model.Reservation;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Service
@@ -13,14 +14,14 @@ class ParkingMeter implements Meter
     {
         return Reservation
             .builder()
-            .startTime(new Date())
+            .startTime(LocalDateTime.now())
             .driver(driver)
             .build();
     }
     
     public Reservation stopReservation(Reservation reservation)
     {
-        reservation.setStopTime(new Date());
+        reservation.setStopTime(LocalDateTime.now());
         
         return reservation;
     }

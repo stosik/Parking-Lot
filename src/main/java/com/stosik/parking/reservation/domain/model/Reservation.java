@@ -16,6 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -31,13 +32,11 @@ public class Reservation
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @Temporal(TemporalType.TIME)
     @CreatedDate
-    private Date startTime;
+    private LocalDateTime startTime;
     
-    @Temporal(TemporalType.TIME)
     @CreatedDate
-    private Date stopTime;
+    private LocalDateTime stopTime;
     
     @OneToOne(fetch = FetchType.LAZY)
     Driver driver;

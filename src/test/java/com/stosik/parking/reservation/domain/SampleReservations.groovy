@@ -5,38 +5,39 @@ import com.stosik.parking.reservation.domain.model.Driver
 import com.stosik.parking.reservation.domain.model.DriverType
 import com.stosik.parking.reservation.domain.model.Reservation
 
-import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.Month
 
 trait SampleReservations
 {
     Reservation firstEndedReservation = createReservation(
         1L,
         createDriver(1L, DriverType.REGULAR),
-        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 00:55:00"),
-        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 01:55:00"),
+        LocalDateTime.of(2011, Month.JANUARY, 1, 00, 55, 00),
+        LocalDateTime.of(2011, Month.JANUARY, 1, 01, 55, 00),
         3.0d
     )
 
     Reservation secondEndedReservation = createReservation(
         2L,
         createDriver(2L, DriverType.VIP),
-        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 00:55:00"),
-        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 02:55:00"),
+        LocalDateTime.of(2011, Month.JANUARY, 1, 00, 55, 00),
+        LocalDateTime.of(2011, Month.JANUARY, 2, 01, 55, 00),
         7.4d
     )
 
     Reservation thirdEndedReservation = createReservation(
         3L,
         createDriver(3L, DriverType.REGULAR),
-        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 00:55:00"),
-        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-02 04:55:00"),
+        LocalDateTime.of(2011, Month.JANUARY, 1, 00, 55, 00),
+        LocalDateTime.of(2011, Month.JANUARY, 4, 01, 55, 00),
         17.25d
     )
 
     Reservation fourthReservation = createReservation(
         4L,
         createDriver(3L, DriverType.REGULAR),
-        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 00:55:00"),
+        LocalDateTime.of(2011, Month.JANUARY, 1, 01, 55, 00),
         null,
         3.0d
     )
@@ -44,7 +45,7 @@ trait SampleReservations
     Reservation fifthReservation = createReservation(
         5L,
         createDriver(3L, DriverType.REGULAR),
-        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 00:55:00"),
+        LocalDateTime.of(2011, Month.JANUARY, 1, 01, 55, 00),
         null,
         null
     )
@@ -59,7 +60,7 @@ trait SampleReservations
 
     Car mondeo = createCar(1L)
 
-    static private Reservation createReservation(Long id, Driver driver, Date start, Date stop, Double cost)
+    static private Reservation createReservation(Long id, Driver driver, LocalDateTime start, LocalDateTime stop, Double cost)
     {
         return Reservation
             .builder()
