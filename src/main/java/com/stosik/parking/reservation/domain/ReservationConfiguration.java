@@ -4,8 +4,6 @@ import com.stosik.parking.reservation.domain.evaluator.PriceCalculator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Collections;
-
 @Configuration
 class ReservationConfiguration
 {

@@ -1,10 +1,11 @@
-package com.stosik.parking.reservation.domain;
+package com.stosik.parking.reservation.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,7 +14,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -21,19 +24,23 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "cars")
-public class Car
+@Table(name = "reservations")
+public class Reservation
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    private Long id;
     
-    @NotNull
-    String brand;
+    @Temporal(TemporalType.TIME)
+    @CreatedDate
+    private Date startTime;
     
-    @NotNull
-    String model;
+    @Temporal(TemporalType.TIME)
+    @CreatedDate
+    private Date stopTime;
     
     @OneToOne(fetch = FetchType.LAZY)
     Driver driver;
+    
+    private Double cost;
 }

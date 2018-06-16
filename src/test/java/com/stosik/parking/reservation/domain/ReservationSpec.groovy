@@ -1,5 +1,8 @@
 package com.stosik.parking.reservation.domain
 
+import com.stosik.parking.reservation.domain.model.Car
+import com.stosik.parking.reservation.domain.model.Driver
+import com.stosik.parking.reservation.domain.model.Reservation
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import spock.lang.Shared
@@ -18,7 +21,7 @@ class ReservationSpec extends Specification implements SampleReservations, Sampl
 
     def "should list reservation in system"()
     {
-        given: "we have two reservations (regular, regular) in a system"
+        given: "we have two reservations (regular, vip) in a system"
         parkingMeter.startReservation(_) >>> [firstEndedReservation, secondEndedReservation]
 
         when: "we start two reservations and ask for all reservations"
@@ -31,30 +34,57 @@ class ReservationSpec extends Specification implements SampleReservations, Sampl
         foundReservations.content.size() == 2
     }
 
+    def "should successfully start parkmeter"()
+    {
+        given: "we have empty system"
+        ReservationRepository repository = Mock()
+        reservationFacade = new ReservationConfiguration().reservationFacade(repository, new InMemoryCarRepository(), parkingMeter)
+        parkingMeter.startReservation(_) >>  fourthReservation
+
+        when: "driver starts reservation"
+        reservationFacade.startParkmeter(henio)
+
+        then: "park meter has been started for driver's car"
+        1 * parkingMeter.startReservation(_)
+    }
+
+    def "should successfully stop parkmeter"()
+    {
+        given: "we have empty system"
+        ReservationRepository repository = Mock()
+        reservationFacade = new ReservationConfiguration().reservationFacade(repository, new InMemoryCarRepository(), parkingMeter)
+        repository.findById(_) >> fourthReservation
+        parkingMeter.stopReservation(_) >> firstEndedReservation
+
+        when: "driver stops reservation"
+        reservationFacade.stopParkmeter(4L)
+
+        then: "park meter has been stopped for a driver's car"
+        1 * parkingMeter.stopReservation(_)
+    }
+
     def "should return 0 as there are no ended reservations for specific day"()
     {
-        given: "we have three reservations (regular, vip, regular) in a system"
-        parkingMeter.startReservation(_) >>> [fourthReservation, fifthReservation]
+        given: "we have empty system"
+        parkingMeter.startReservation(_) >>> [fourthReservation]
 
         when: "we ask for all reservations on 01.01.2011"
         reservationFacade.startParkmeter(henio)
-        reservationFacade.startParkmeter(szymon)
 
         def earningsForSpecificDay = reservationFacade.dailyTakings(new PageRequest(0, 10), specificDay)
 
-        then: "system returns correctly calculated earning"
+        then: "system returns correctly calculated earnings"
 
         earningsForSpecificDay == 0.0d
     }
 
     def "should return correct earnings for owner for specific day"()
     {
-        given: "we have three reservations (regular, regular) in a system"
-        parkingMeter.startReservation(_) >>> [firstEndedReservation, fifthReservation]
+        given: "we have empty system"
+        parkingMeter.startReservation(_) >>> [firstEndedReservation]
 
         when: "we ask for all reservations on 01.01.2011"
         reservationFacade.startParkmeter(henio)
-        reservationFacade.startParkmeter(szymon)
 
         def earningsForSpecificDay = reservationFacade.dailyTakings(new PageRequest(0, 10), specificDay)
 
@@ -65,7 +95,7 @@ class ReservationSpec extends Specification implements SampleReservations, Sampl
 
     def "should return correct earnings for owner for specific day for multiple evaluators"()
     {
-        given: "we have three reservations (regular, regular) in a system"
+        given: "we have three reservations (regular, vip, regular) in a system"
         parkingMeter.startReservation(_) >>> [firstEndedReservation, secondEndedReservation, fifthReservation]
 
         when: "we ask for all reservations on 01.01.2011"
@@ -76,7 +106,7 @@ class ReservationSpec extends Specification implements SampleReservations, Sampl
 
         then: "system returns correctly calculated earnings"
 
-        earningsForSpecificDay == 7.4d
+        earningsForSpecificDay == 10.4d
     }
 
     def "should check whether driver's car has started park meter"()
@@ -89,7 +119,7 @@ class ReservationSpec extends Specification implements SampleReservations, Sampl
 
         carRepository.findById(_) >> car
         car.getDriver() >> driver
-        driver.getReservations() >> Collections.singleton(fifthReservation)
+        driver.getReservation() >> fifthReservation
 
         when: "operator checks car"
         def startedParkmeter = reservationFacade.checkVehicle(mondeo.id)
@@ -109,7 +139,7 @@ class ReservationSpec extends Specification implements SampleReservations, Sampl
 
         carRepository.findById(_) >> car
         car.getDriver() >> driver
-        driver.getReservations() >> Collections.singleton(firstEndedReservation)
+        driver.getReservation() >> notStartedReservation
 
         when: "operator checks car"
         def startedParkmeter = reservationFacade.checkVehicle(mondeo.id)

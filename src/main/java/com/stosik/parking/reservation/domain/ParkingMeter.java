@@ -1,5 +1,7 @@
 package com.stosik.parking.reservation.domain;
 
+import com.stosik.parking.reservation.domain.model.Driver;
+import com.stosik.parking.reservation.domain.model.Reservation;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

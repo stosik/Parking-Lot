@@ -1,4 +1,4 @@
-package com.stosik.parking.reservation.domain;
+package com.stosik.parking.reservation.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,9 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.Singular;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -16,11 +14,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -28,7 +24,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(exclude = {"reservations", "car"})
+@EqualsAndHashCode(exclude = {"reservation", "car"})
 @Table(name = "drivers")
 public class Driver
 {
@@ -51,7 +47,6 @@ public class Driver
     @OneToOne(mappedBy = "driver")
     private Car car;
     
-    @Singular
-    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL)
-    private Set<Reservation> reservations;
+    @OneToOne(mappedBy = "driver")
+    private Reservation reservation;
 }

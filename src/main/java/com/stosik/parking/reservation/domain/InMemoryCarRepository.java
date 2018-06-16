@@ -1,5 +1,7 @@
 package com.stosik.parking.reservation.domain;
 
+import com.stosik.parking.reservation.domain.model.Car;
+
 import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Objects.requireNonNull;

@@ -1,6 +1,6 @@
 package com.stosik.parking.reservation.domain.evaluator;
 
-import com.stosik.parking.reservation.domain.DriverType;
+import com.stosik.parking.reservation.domain.model.DriverType;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,7 +1,7 @@
 package com.stosik.parking;
 
-import com.stosik.parking.reservation.domain.Driver;
-import com.stosik.parking.reservation.domain.Reservation;
+import com.stosik.parking.reservation.domain.model.Driver;
+import com.stosik.parking.reservation.domain.model.Reservation;
 import com.stosik.parking.reservation.domain.ReservationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

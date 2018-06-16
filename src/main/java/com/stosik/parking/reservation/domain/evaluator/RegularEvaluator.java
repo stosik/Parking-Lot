@@ -1,6 +1,6 @@
 package com.stosik.parking.reservation.domain.evaluator;
 
-import com.stosik.parking.reservation.domain.Reservation;
+import com.stosik.parking.reservation.domain.model.Reservation;
 import com.stosik.util.DateUtils;
 
 class RegularEvaluator implements RateEvaluatorStrategy

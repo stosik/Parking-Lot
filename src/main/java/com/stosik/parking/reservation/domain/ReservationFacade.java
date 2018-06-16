@@ -1,6 +1,8 @@
 package com.stosik.parking.reservation.domain;
 
 import com.stosik.parking.reservation.domain.evaluator.PriceCalculator;
+import com.stosik.parking.reservation.domain.model.Driver;
+import com.stosik.parking.reservation.domain.model.Reservation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -33,19 +35,11 @@ public class ReservationFacade
     
     public Reservation stopParkmeter(Long id)
     {
-        return parkingMeter.stopReservation(reservationRepository.findById(id));
-    }
-    
-    public double dailyTakings(Pageable pageable, Date day)
-    {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(day);
+        Reservation reservation = reservationRepository.findById(id);
+        reservation = parkingMeter.stopReservation(reservation);
+        reservation.setCost(priceCalculator.calculatePrice(reservation));
         
-        return reservationRepository
-            .findByDate(pageable, cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR))
-            .stream()
-            .map(this::calculateCost)
-            .reduce(0.0, Double::sum);
+        return reservation;
     }
     
     public double dispendReservationTicket(Long id)
@@ -57,12 +51,24 @@ public class ReservationFacade
     
     public boolean checkVehicle(Long id)
     {
-        return carRepository
+        Reservation reservation = carRepository
             .findById(id)
             .getDriver()
-            .getReservations()
+            .getReservation();
+        
+        return hasStartedParkmeter(reservation);
+    }
+    
+    public double dailyTakings(Pageable pageable, Date day)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(day);
+        
+        return reservationRepository
+            .findByDate(pageable, cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR))
             .stream()
-            .anyMatch(this::hasOnlyStartDate);
+            .map(Reservation::getCost)
+            .reduce(0.0, Double::sum);
     }
     
     public Page<Reservation> showAll(Pageable pageable)
@@ -70,13 +76,8 @@ public class ReservationFacade
         return reservationRepository.findAll(pageable);
     }
     
-    private double calculateCost(Reservation reservation)
+    private boolean hasStartedParkmeter(Reservation reservation)
     {
-        return priceCalculator.calculatePrice(reservation);
-    }
-    
-    private boolean hasOnlyStartDate(Reservation reservation)
-    {
-        return reservation.getStartTime() != null && reservation.getStopTime() == null;
+        return reservation.getStartTime() != null;
     }
 }
