@@ -22,7 +22,7 @@ trait SampleReservations
         3L,
         createDriver(3L, DriverType.REGULAR),
         new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-01 00:55:00"),
-        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-02 02:55:00")
+        new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2011-01-02 04:55:00")
     )
 
     Reservation fourthReservation = createReservation(

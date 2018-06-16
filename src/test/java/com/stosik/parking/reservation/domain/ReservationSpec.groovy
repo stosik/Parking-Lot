@@ -1,8 +1,5 @@
 package com.stosik.parking.reservation.domain
 
-import com.stosik.parking.reservation.domain.evaluator.Evaluator
-import com.stosik.parking.reservation.domain.evaluator.RegularEvaluator
-import com.stosik.parking.reservation.domain.evaluator.VipEvaluator
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import spock.lang.Shared
@@ -17,9 +14,7 @@ class ReservationSpec extends Specification implements SampleReservations, Sampl
 
     Meter parkingMeter = Mock()
 
-    Set<Evaluator> evaluators = new HashSet<>(Arrays.asList(new VipEvaluator(), new RegularEvaluator()))
-
-    def reservationFacade = new ReservationConfiguration().reservationFacade(new InMemoryReservationRepository(), new InMemoryCarRepository(), evaluators, parkingMeter)
+    def reservationFacade = new ReservationConfiguration().reservationFacade(new InMemoryReservationRepository(), new InMemoryCarRepository(), parkingMeter)
 
     def "should list reservation in system"()
     {
@@ -88,7 +83,7 @@ class ReservationSpec extends Specification implements SampleReservations, Sampl
     {
         given: "driver started park meter for his car"
         InMemoryCarRepository carRepository = Mock()
-        reservationFacade = new ReservationConfiguration().reservationFacade(Mock(InMemoryReservationRepository), carRepository, evaluators, parkingMeter)
+        reservationFacade = new ReservationConfiguration().reservationFacade(Mock(InMemoryReservationRepository), carRepository, parkingMeter)
         def driver = Mock(Driver)
         def car = Mock(Car)
 
@@ -107,7 +102,7 @@ class ReservationSpec extends Specification implements SampleReservations, Sampl
     {
         given: "driver started park meter for his car"
         InMemoryCarRepository carRepository = Mock()
-        reservationFacade = new ReservationConfiguration().reservationFacade(Mock(InMemoryReservationRepository), carRepository, evaluators, parkingMeter)
+        reservationFacade = new ReservationConfiguration().reservationFacade(Mock(InMemoryReservationRepository), carRepository, parkingMeter)
 
         def driver = Mock(Driver)
         def car = Mock(Car)

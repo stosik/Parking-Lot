@@ -1,28 +1,19 @@
 package com.stosik.parking.reservation.domain.evaluator;
 
-import com.stosik.parking.reservation.domain.DriverType;
 import com.stosik.parking.reservation.domain.Reservation;
 import com.stosik.util.DateUtils;
-import org.springframework.stereotype.Service;
 
-@Service
-public class RegularEvaluator implements Evaluator
+class RegularEvaluator implements RateEvaluatorStrategy
 {
     private static final Double FIRST_HOUR_COST = 1.0;
     private static final Double SECOND_HOUR_COST = 2.0;
     private static final Double CONVERSION_RATE = 1.5;
     
     @Override
-    public boolean isAppropriateFor(DriverType driverType)
-    {
-        return driverType == DriverType.REGULAR;
-    }
-    
-    @Override
     public double calculateReservationCost(Reservation reservation)
     {
         int hours = DateUtils.hoursDifference(reservation.getStartTime(), reservation.getStopTime()) + 1;
-        
+    
         switch(hours)
         {
             case 1:
@@ -33,8 +24,7 @@ public class RegularEvaluator implements Evaluator
                 return FIRST_HOUR_COST +
                        SECOND_HOUR_COST +
                        countEachNextHour(SECOND_HOUR_COST, 2, hours);
-        }
-    }
+        }    }
     
     private double countEachNextHour(double result, int actualHour, int reservationHours)
     {

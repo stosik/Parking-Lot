@@ -1,27 +1,26 @@
 package com.stosik.parking.reservation.domain;
 
-import com.stosik.parking.reservation.domain.evaluator.Evaluator;
+import com.stosik.parking.reservation.domain.evaluator.PriceCalculator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Set;
 
 @Transactional
 public class ReservationFacade
 {
     private final ReservationRepository reservationRepository;
     private final CarRepository carRepository;
-    private final Set<Evaluator> evaluators;
+    private final PriceCalculator priceCalculator;
     private final Meter parkingMeter;
     
-    ReservationFacade(ReservationRepository reservationRepository, CarRepository carRepository, Set<Evaluator> evaluators, Meter parkingMeter)
+    ReservationFacade(ReservationRepository reservationRepository, CarRepository carRepository, PriceCalculator priceCalculator, Meter parkingMeter)
     {
         this.reservationRepository = reservationRepository;
         this.carRepository = carRepository;
-        this.evaluators = evaluators;
+        this.priceCalculator = priceCalculator;
         this.parkingMeter = parkingMeter;
     }
     
@@ -71,19 +70,9 @@ public class ReservationFacade
         return reservationRepository.findAll(pageable);
     }
     
-    /*
-        TODO maybe supplied with visitor pattern for Evaluators
-     */
     private double calculateCost(Reservation reservation)
     {
-        DriverType driverType = reservation.getDriver().getType();
-        
-        return evaluators
-            .stream()
-            .filter(evaluator -> evaluator.isAppropriateFor(driverType))
-            .map(evaluator -> evaluator.calculateReservationCost(reservation))
-            .mapToDouble(Double::doubleValue)
-            .sum();
+        return priceCalculator.calculatePrice(reservation);
     }
     
     private boolean hasOnlyStartDate(Reservation reservation)
