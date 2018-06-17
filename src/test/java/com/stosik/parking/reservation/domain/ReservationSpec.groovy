@@ -51,9 +51,8 @@ class ReservationSpec extends Specification implements SampleReservations
     {
         given: "we have empty system"
         ReservationRepository repository = Mock()
-        reservationFacade = new ReservationConfiguration().reservationFacade(repository, new InMemoryCarRepository(), parkingMeter)
+        reservationFacade = new ReservationConfiguration().reservationFacade(repository, new InMemoryCarRepository(), new ParkingMeter())
         repository.findById(_) >> fourthReservation
-        parkingMeter.stopReservation(_) >> firstEndedReservation
 
         when: "driver stops reservation"
         reservationFacade.stopParkmeter(4L)
@@ -62,28 +61,15 @@ class ReservationSpec extends Specification implements SampleReservations
         1 * parkingMeter.stopReservation(_)
     }
 
-    def "should return 0 as there are no ended reservations for specific day"()
-    {
-        given: "we have empty system"
-        parkingMeter.startReservation(_) >>> [fourthReservation]
-
-        when: "we ask for all reservations on 01.01.2011"
-        reservationFacade.startParkmeter(createReservationCommand)
-
-        def earningsForSpecificDay = reservationFacade.dailyTakings(new PageRequest(0, 10), specificDay)
-
-        then: "system returns correctly calculated earnings"
-
-        earningsForSpecificDay == 0.0d
-    }
-
     def "should return correct earnings for owner for specific day"()
     {
         given: "we have empty system"
-        parkingMeter.startReservation(_) >>> [firstEndedReservation]
+
+        ReservationRepository repository = Mock()
+        reservationFacade = new ReservationConfiguration().reservationFacade(repository, new InMemoryCarRepository(), new ParkingMeter())
+        repository.findByDate(_, _, _, _) >> Collections.singletonList(firstEndedReservation)
 
         when: "we ask for all reservations on 01.01.2011"
-        reservationFacade.startParkmeter(createReservationCommand)
 
         def earningsForSpecificDay = reservationFacade.dailyTakings(new PageRequest(0, 10), specificDay)
 
@@ -95,11 +81,12 @@ class ReservationSpec extends Specification implements SampleReservations
     def "should return correct earnings for owner for specific day for multiple evaluators"()
     {
         given: "we have three reservations (regular, vip, regular) in a system"
-        parkingMeter.startReservation(_) >>> [firstEndedReservation, secondEndedReservation, fifthReservation]
+
+        ReservationRepository repository = Mock()
+        reservationFacade = new ReservationConfiguration().reservationFacade(repository, new InMemoryCarRepository(), new ParkingMeter())
+        repository.findByDate(_, _, _, _) >> Arrays.asList(firstEndedReservation, secondEndedReservation)
 
         when: "we ask for all reservations on 01.01.2011"
-        reservationFacade.startParkmeter(createReservationCommand)
-        reservationFacade.startParkmeter(createReservationCommand)
 
         def earningsForSpecificDay = reservationFacade.dailyTakings(new PageRequest(0, 10), specificDay)
 
