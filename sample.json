@@ -1,7 +1,7 @@
+//POST
 {
-    "car": {
-        "brand": "Saab",
-        "model": "9-3SS"
-    },
+    "carLicenseId": "EPA13AS",
     "driverType": "VIP"
 }
+
+//

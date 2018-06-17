@@ -4,15 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 @Entity
 @Getter
@@ -27,9 +28,9 @@ public class Car
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
     
-    String brand;
-    
-    String model;
+    @NonNull
+    @Size(min = 6, max = 6)
+    String licenseId;
     
     @OneToOne(mappedBy = "car")
     Reservation reservation;

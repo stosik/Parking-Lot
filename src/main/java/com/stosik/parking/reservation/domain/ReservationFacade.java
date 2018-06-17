@@ -3,10 +3,11 @@ package com.stosik.parking.reservation.domain;
 import com.stosik.parking.reservation.domain.evaluator.PriceCalculator;
 import com.stosik.parking.reservation.domain.model.Reservation;
 import com.stosik.parking.reservation.dto.CreateReservationCommand;
-import org.springframework.data.domain.Page;
+import com.stosik.parking.reservation.dto.ReservationDto;
 import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -17,48 +18,52 @@ public class ReservationFacade
     private final CarRepository carRepository;
     private final PriceCalculator priceCalculator;
     private final Meter parkingMeter;
+    private final ReservationDtoCreator reservationDtoCreator;
     
-    ReservationFacade(ReservationRepository reservationRepository, CarRepository carRepository, PriceCalculator priceCalculator, Meter parkingMeter)
+    ReservationFacade(ReservationRepository reservationRepository, CarRepository carRepository, PriceCalculator priceCalculator,
+        Meter parkingMeter, ReservationDtoCreator reservationDtoCreator)
     {
         this.reservationRepository = reservationRepository;
         this.carRepository = carRepository;
         this.priceCalculator = priceCalculator;
+        this.reservationDtoCreator = reservationDtoCreator;
         this.parkingMeter = parkingMeter;
     }
     
-    public Reservation startParkmeter(CreateReservationCommand createReservationCommand)
+    public ReservationDto startParkmeter(CreateReservationCommand createReservationCommand)
     {
         Reservation reservation = parkingMeter.startReservation(createReservationCommand);
+        reservation = reservationRepository.save(reservation);
         
-        return reservationRepository.save(reservation);
+        return reservationDtoCreator.from(reservation);
     }
     
-    public Reservation stopParkmeter(Long id)
+    public ReservationDto stopParkmeter(Long id)
     {
         Reservation reservation = reservationRepository.findById(id);
         reservation = parkingMeter.stopReservation(reservation);
         reservation.setCost(priceCalculator.calculatePrice(reservation));
         
-        return reservation;
+        return reservationDtoCreator.from(reservation);
     }
     
-    public double dispendReservationTicket(Long id)
+    public BigDecimal dispendReservationTicket(Long id)
     {
         return reservationRepository
             .findById(id)
             .getCost();
     }
     
-    public boolean checkVehicle(Long id)
+    public boolean checkVehicle(String licenseId)
     {
         Reservation reservation = carRepository
-            .findById(id)
+            .findByLicenseId(licenseId)
             .getReservation();
         
         return hasStartedParkmeter(reservation);
     }
     
-    public double dailyTakings(Pageable pageable, Date day)
+    public BigDecimal dailyTakings(Pageable pageable, Date day)
     {
         Calendar cal = Calendar.getInstance();
         cal.setTime(day);
@@ -67,12 +72,7 @@ public class ReservationFacade
             .findByDate(pageable, cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR))
             .stream()
             .map(Reservation::getCost)
-            .reduce(0.0, Double::sum);
-    }
-    
-    public Page<Reservation> showAll(Pageable pageable)
-    {
-        return reservationRepository.findAll(pageable);
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
     
     private boolean hasStartedParkmeter(Reservation reservation)

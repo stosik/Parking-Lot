@@ -1,20 +1,33 @@
 package com.stosik.parking.reservation.domain
 
 import com.stosik.parking.base.IntegrationSpec
+import com.stosik.parking.reservation.domain.model.Car
+import com.stosik.parking.reservation.dto.CreateReservationCommand
+import org.springframework.test.web.servlet.ResultActions
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-class ReservationControllerAcceptanceSpec extends IntegrationSpec
+class ReservationControllerAcceptanceSpec extends IntegrationSpec implements SampleReservations
 {
     def "should show valid path for driver"()
     {
         given:"given system is completely empty"
 
         when:"driver starts park meter"
+        ResultActions postReservation = mockMvc.perform(post("/parking/driver/start", new CreateReservationCommand(new Car())))
 
         then:"there is one reservation in system"
+        postReservation
+            .andExpect(status().isOk())
+            .andExpect(content().json("""
+                {
+                    "content": [
+                        {"title":"$clingon.title","type":"$clingon.type"},
+                        {"title":"$trumper.title","type":"$trumper.type"}
+                    ]
+                }"""))
 
         when:"driver stops park meter and ask for price of reservation"
 

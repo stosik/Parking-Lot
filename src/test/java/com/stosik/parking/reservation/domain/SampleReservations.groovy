@@ -12,34 +12,39 @@ trait SampleReservations
 {
     Reservation firstEndedReservation = createReservation(
         1L,
+        DriverType.REGULAR,
         LocalDateTime.of(2011, Month.JANUARY, 1, 00, 55, 00),
         LocalDateTime.of(2011, Month.JANUARY, 1, 01, 55, 00),
-        3.0d
+        3.0
     )
 
     Reservation secondEndedReservation = createReservation(
         2L,
+        DriverType.REGULAR,
         LocalDateTime.of(2011, Month.JANUARY, 1, 00, 55, 00),
-        LocalDateTime.of(2011, Month.JANUARY, 2, 01, 55, 00),
-        7.4d
+        LocalDateTime.of(2011, Month.JANUARY, 1, 02, 55, 00),
+        7.4
     )
 
     Reservation thirdEndedReservation = createReservation(
         3L,
+        DriverType.REGULAR,
         LocalDateTime.of(2011, Month.JANUARY, 1, 00, 55, 00),
-        LocalDateTime.of(2011, Month.JANUARY, 4, 01, 55, 00),
-        17.25d
+        LocalDateTime.of(2011, Month.JANUARY, 1, 04, 55, 00),
+        17.25
     )
 
     Reservation fourthReservation = createReservation(
         4L,
+        DriverType.REGULAR,
         LocalDateTime.of(2011, Month.JANUARY, 1, 01, 55, 00),
         null,
-        3.0d
+        3.0
     )
 
     Reservation fifthReservation = createReservation(
         5L,
+        DriverType.REGULAR,
         LocalDateTime.of(2011, Month.JANUARY, 1, 01, 55, 00),
         null,
         null
@@ -47,43 +52,103 @@ trait SampleReservations
 
     Reservation notStartedReservation = createReservation(
         6L,
+        DriverType.REGULAR,
         null,
         null,
         null
     )
 
-    CreateReservationCommand createReservationCommand = createCommand(
+    Reservation reservationWithCar = createReservationWithCar(
+        4L,
         DriverType.REGULAR,
-        createCar(1L)
+        LocalDateTime.of(2011, Month.JANUARY, 1, 01, 55, 00),
+        null,
+        3.0,
+        createCar(1L, "EPA213", null)
     )
 
-    Car mondeo = createCar(1L)
+    Reservation endedReservationWithCar = createReservationWithCar(
+        4L,
+        DriverType.REGULAR,
+        LocalDateTime.of(2011, Month.JANUARY, 1, 00, 55, 00),
+        LocalDateTime.of(2011, Month.JANUARY, 1, 01, 55, 00),
+        3.0,
+        createCar(1L, "EPA213", null)
+    )
 
-    static private Reservation createReservation(Long id, LocalDateTime start, LocalDateTime stop, Double cost)
+    CreateReservationCommand createReservationCommand = createCommand(
+        DriverType.REGULAR,
+        "EPA234"
+    )
+
+    Car mondeo = createCar(1L, "ELP234", null)
+
+    Car carWithReservation = createCar(
+        1L,
+        "ELP234",
+        createReservation(
+            6L,
+            DriverType.REGULAR,
+            LocalDateTime.of(2011, Month.JANUARY, 1, 00, 55, 00),
+            null,
+            null
+        )
+    )
+
+
+    Car carWithoutReservation = createCar(
+        1L,
+        "ELP234",
+        createReservation(
+            6L,
+            DriverType.REGULAR,
+            null,
+            null,
+            null
+        )
+    )
+
+    static private Reservation createReservation(Long id, DriverType driverType, LocalDateTime start, LocalDateTime stop, BigDecimal cost)
     {
         return Reservation
             .builder()
             .id(id)
             .startTime(start)
             .stopTime(stop)
+            .driverType(driverType)
             .cost(cost)
             .build()
     }
 
-    static private CreateReservationCommand createCommand(DriverType driverType, Car car)
+    static private Reservation createReservationWithCar(Long id, DriverType driverType, LocalDateTime start, LocalDateTime stop, BigDecimal cost, Car car)
+    {
+        return Reservation
+            .builder()
+            .id(id)
+            .startTime(start)
+            .stopTime(stop)
+            .car(car)
+            .driverType(driverType)
+            .cost(cost)
+            .build()
+    }
+
+    static private CreateReservationCommand createCommand(DriverType driverType, String carLicenseId)
     {
         return CreateReservationCommand
             .builder()
             .driverType(driverType)
-            .car(car)
+            .carLicenseId(carLicenseId)
             .build()
     }
 
-    static private Car createCar(Long id)
+    static private Car createCar(Long id, String licenseId, Reservation reservation)
     {
         return Car
             .builder()
             .id(id)
+            .licenseId(licenseId)
+            .reservation(reservation)
             .build()
     }
 }

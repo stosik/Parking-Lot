@@ -18,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -46,5 +47,5 @@ public class Reservation
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Car car;
     
-    private Double cost;
+    private BigDecimal cost;
 }

@@ -11,7 +11,8 @@ class ReservationConfiguration
     ReservationFacade reservationFacade(ReservationRepository reservationRepository, CarRepository carRepository, Meter parkingMeter)
     {
         PriceCalculator priceCalculator = new PriceCalculator();
+        ReservationDtoCreator reservationDtoCreator = new ReservationDtoCreator();
         
-        return new ReservationFacade(reservationRepository, carRepository, priceCalculator, parkingMeter);
+        return new ReservationFacade(reservationRepository, carRepository, priceCalculator, parkingMeter, reservationDtoCreator);
     }
 }

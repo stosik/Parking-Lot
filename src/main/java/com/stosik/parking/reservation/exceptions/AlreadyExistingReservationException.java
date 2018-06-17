@@ -1,4 +1,4 @@
-package com.stosik.parking.reservation.dto.exceptions;
+package com.stosik.parking.reservation.exceptions;
 
 public class AlreadyExistingReservationException extends RuntimeException
 {
