@@ -8,6 +8,8 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +18,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -32,14 +35,18 @@ public class Reservation
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private DriverType driverType;
+    
     @CreatedDate
     private LocalDateTime startTime;
     
     @CreatedDate
     private LocalDateTime stopTime;
     
-    @OneToOne(fetch = FetchType.LAZY)
-    Driver driver;
+    @OneToOne(mappedBy = "reservation")
+    private Car car;
     
     private Double cost;
 }

@@ -9,7 +9,7 @@ public class PriceCalculator
     
     public double calculatePrice(Reservation reservation)
     {
-        DriverType driverType = reservation.getDriver().getType();
+        DriverType driverType = reservation.getDriverType();
         RateEvaluatorStrategy rateEvaluatorStrategy = rateEvaluatorFactory.retrieveAppropriateStrategy(driverType);
         
         return rateEvaluatorStrategy.calculateReservationCost(reservation);

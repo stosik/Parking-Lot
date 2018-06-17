@@ -1,8 +1,8 @@
 package com.stosik.parking.reservation.domain;
 
 import com.stosik.parking.reservation.domain.evaluator.PriceCalculator;
-import com.stosik.parking.reservation.domain.model.Driver;
 import com.stosik.parking.reservation.domain.model.Reservation;
+import com.stosik.parking.reservation.dto.CreateReservationCommand;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -26,9 +26,9 @@ public class ReservationFacade
         this.parkingMeter = parkingMeter;
     }
     
-    public Reservation startParkmeter(Driver driver)
+    public Reservation startParkmeter(CreateReservationCommand createReservationCommand)
     {
-        Reservation reservation = parkingMeter.startReservation(driver);
+        Reservation reservation = parkingMeter.startReservation(createReservationCommand);
         
         return reservationRepository.save(reservation);
     }
@@ -53,7 +53,6 @@ public class ReservationFacade
     {
         Reservation reservation = carRepository
             .findById(id)
-            .getDriver()
             .getReservation();
         
         return hasStartedParkmeter(reservation);

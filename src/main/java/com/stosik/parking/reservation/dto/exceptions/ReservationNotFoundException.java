@@ -1,4 +1,4 @@
-package com.stosik.parking.reservation.dto;
+package com.stosik.parking.reservation.dto.exceptions;
 
 public class ReservationNotFoundException extends RuntimeException
 {

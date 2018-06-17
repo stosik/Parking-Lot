@@ -1,7 +1,7 @@
 package com.stosik.parking.reservation.domain;
 
 import com.stosik.parking.reservation.domain.model.Reservation;
-import com.stosik.parking.reservation.dto.ReservationNotFoundException;
+import com.stosik.parking.reservation.dto.exceptions.ReservationNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;

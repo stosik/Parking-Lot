@@ -32,5 +32,5 @@ public class Car
     String model;
     
     @OneToOne(fetch = FetchType.LAZY)
-    Driver driver;
+    Reservation reservation;
 }

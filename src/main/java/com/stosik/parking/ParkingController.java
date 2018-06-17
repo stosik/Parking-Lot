@@ -1,8 +1,8 @@
 package com.stosik.parking;
 
-import com.stosik.parking.reservation.domain.model.Driver;
 import com.stosik.parking.reservation.domain.model.Reservation;
 import com.stosik.parking.reservation.domain.ReservationFacade;
+import com.stosik.parking.reservation.dto.CreateReservationCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,9 +41,9 @@ class ParkingController
     }
     
     @PostMapping("/driver/start")
-    public Reservation startParkmeter(@RequestBody Driver driver)
+    public Reservation startParkmeter(@RequestBody CreateReservationCommand createReservationCommand)
     {
-        return reservationFacade.startParkmeter(driver);
+        return reservationFacade.startParkmeter(createReservationCommand);
     }
     
     @PostMapping("/driver/{id}/stop")

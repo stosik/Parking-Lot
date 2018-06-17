@@ -1,7 +1,6 @@
 package com.stosik.parking.reservation.domain
 
 import com.stosik.parking.reservation.domain.model.Car
-import com.stosik.parking.reservation.domain.model.Driver
 import com.stosik.parking.reservation.domain.model.Reservation
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -10,7 +9,7 @@ import spock.lang.Specification
 
 import java.text.SimpleDateFormat
 
-class ReservationSpec extends Specification implements SampleReservations, SampleDrivers
+class ReservationSpec extends Specification implements SampleReservations
 {
     @Shared
     Date specificDay = new SimpleDateFormat("yyyy-MM-dd").parse("2011-01-01")
@@ -25,8 +24,8 @@ class ReservationSpec extends Specification implements SampleReservations, Sampl
         parkingMeter.startReservation(_) >>> [firstEndedReservation, secondEndedReservation]
 
         when: "we start two reservations and ask for all reservations"
-        reservationFacade.startParkmeter(henio)
-        reservationFacade.startParkmeter(szymon)
+        reservationFacade.startParkmeter(createReservationCommand)
+        reservationFacade.startParkmeter(createReservationCommand)
 
         Page<Reservation> foundReservations = reservationFacade.showAll(new PageRequest(0, 10))
 
@@ -39,10 +38,10 @@ class ReservationSpec extends Specification implements SampleReservations, Sampl
         given: "we have empty system"
         ReservationRepository repository = Mock()
         reservationFacade = new ReservationConfiguration().reservationFacade(repository, new InMemoryCarRepository(), parkingMeter)
-        parkingMeter.startReservation(_) >>  fourthReservation
+        parkingMeter.startReservation(_) >> fourthReservation
 
         when: "driver starts reservation"
-        reservationFacade.startParkmeter(henio)
+        reservationFacade.startParkmeter(createReservationCommand)
 
         then: "park meter has been started for driver's car"
         1 * parkingMeter.startReservation(_)
@@ -69,7 +68,7 @@ class ReservationSpec extends Specification implements SampleReservations, Sampl
         parkingMeter.startReservation(_) >>> [fourthReservation]
 
         when: "we ask for all reservations on 01.01.2011"
-        reservationFacade.startParkmeter(henio)
+        reservationFacade.startParkmeter(createReservationCommand)
 
         def earningsForSpecificDay = reservationFacade.dailyTakings(new PageRequest(0, 10), specificDay)
 
@@ -84,7 +83,7 @@ class ReservationSpec extends Specification implements SampleReservations, Sampl
         parkingMeter.startReservation(_) >>> [firstEndedReservation]
 
         when: "we ask for all reservations on 01.01.2011"
-        reservationFacade.startParkmeter(henio)
+        reservationFacade.startParkmeter(createReservationCommand)
 
         def earningsForSpecificDay = reservationFacade.dailyTakings(new PageRequest(0, 10), specificDay)
 
@@ -99,8 +98,8 @@ class ReservationSpec extends Specification implements SampleReservations, Sampl
         parkingMeter.startReservation(_) >>> [firstEndedReservation, secondEndedReservation, fifthReservation]
 
         when: "we ask for all reservations on 01.01.2011"
-        reservationFacade.startParkmeter(henio)
-        reservationFacade.startParkmeter(szymon)
+        reservationFacade.startParkmeter(createReservationCommand)
+        reservationFacade.startParkmeter(createReservationCommand)
 
         def earningsForSpecificDay = reservationFacade.dailyTakings(new PageRequest(0, 10), specificDay)
 
@@ -114,12 +113,10 @@ class ReservationSpec extends Specification implements SampleReservations, Sampl
         given: "driver started park meter for his car"
         InMemoryCarRepository carRepository = Mock()
         reservationFacade = new ReservationConfiguration().reservationFacade(Mock(InMemoryReservationRepository), carRepository, parkingMeter)
-        def driver = Mock(Driver)
         def car = Mock(Car)
 
         carRepository.findById(_) >> car
-        car.getDriver() >> driver
-        driver.getReservation() >> fifthReservation
+        car.getReservation() >> fifthReservation
 
         when: "operator checks car"
         def startedParkmeter = reservationFacade.checkVehicle(mondeo.id)
@@ -134,12 +131,10 @@ class ReservationSpec extends Specification implements SampleReservations, Sampl
         InMemoryCarRepository carRepository = Mock()
         reservationFacade = new ReservationConfiguration().reservationFacade(Mock(InMemoryReservationRepository), carRepository, parkingMeter)
 
-        def driver = Mock(Driver)
         def car = Mock(Car)
 
         carRepository.findById(_) >> car
-        car.getDriver() >> driver
-        driver.getReservation() >> notStartedReservation
+        car.getReservation() >> notStartedReservation
 
         when: "operator checks car"
         def startedParkmeter = reservationFacade.checkVehicle(mondeo.id)
