@@ -41,7 +41,7 @@ class ParkingController
         return reservationFacade.dispendReservationTicket(id);
     }
     
-    @GetMapping("/operator/cars")
+    @GetMapping("/operator/control")
     public boolean checkIfParkmeterStarted(@RequestParam String licenseId)
     {
         return reservationFacade.checkVehicle(licenseId);

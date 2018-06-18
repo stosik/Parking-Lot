@@ -35,20 +35,13 @@ trait SampleReservations
         createCar(1L, "EPA213", null)
     )
 
-    Reservation fifthReservation = createReservation(
-        5L,
-        DriverType.REGULAR,
-        LocalDateTime.of(2011, Month.JANUARY, 1, 01, 55, 00),
-        null,
-        null
-    )
-
-    Reservation notStartedReservation = createReservation(
+    Reservation notStartedReservationWithCar = createReservationWithCar(
         6L,
         DriverType.REGULAR,
         null,
         null,
-        null
+        null,
+        createCar(1L, "EPA213", null)
     )
 
     Reservation reservationWithCar = createReservationWithCar(
@@ -56,25 +49,24 @@ trait SampleReservations
         DriverType.REGULAR,
         LocalDateTime.of(2011, Month.JANUARY, 1, 01, 55, 00),
         null,
-        3.0,
+        0.0,
         createCar(1L, "EPA213", null)
     )
 
-    Reservation endedReservationWithCar = createReservationWithCar(
-        4L,
+    Reservation reservationWithCarInt = createReservationWithCar(
+        null,
         DriverType.REGULAR,
         LocalDateTime.of(2011, Month.JANUARY, 1, 00, 55, 00),
         LocalDateTime.of(2011, Month.JANUARY, 1, 01, 55, 00),
         3.0,
-        createCar(1L, "EPA213", null)
+        createCar(null, "EPA213", null)
     )
+
 
     CreateReservationCommand createReservationCommand = createCommand(
         DriverType.REGULAR,
         "EPA234"
     )
-
-    Car mondeo = createCar(1L, "ELP234", null)
 
     Car carWithReservation = createCar(
         1L,
@@ -87,7 +79,6 @@ trait SampleReservations
             null
         )
     )
-
 
     Car carWithoutReservation = createCar(
         1L,

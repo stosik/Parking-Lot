@@ -6,6 +6,7 @@ import groovy.transform.TypeChecked
 import org.junit.Before
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.MediaType
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
@@ -14,6 +15,7 @@ import org.springframework.web.context.WebApplicationContext
 import spock.lang.Specification
 
 import javax.transaction.Transactional
+import java.nio.charset.Charset
 
 @TypeChecked
 @SpringBootTest(classes = [ParkingLotApplication])
@@ -24,6 +26,10 @@ abstract class IntegrationSpec extends Specification
 {
     @Autowired
     protected WebApplicationContext webApplicationContext
+
+    MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
+                                          MediaType.APPLICATION_JSON.getSubtype(),
+                                          Charset.forName("utf8"))
 
     MockMvc mockMvc
 
