@@ -26,20 +26,13 @@ trait SampleReservations
         7.4
     )
 
-    Reservation thirdEndedReservation = createReservation(
-        3L,
-        DriverType.REGULAR,
-        LocalDateTime.of(2011, Month.JANUARY, 1, 00, 55, 00),
-        LocalDateTime.of(2011, Month.JANUARY, 1, 04, 55, 00),
-        17.25
-    )
-
-    Reservation fourthReservation = createReservation(
+    Reservation nowReservation = createReservationWithCar(
         4L,
         DriverType.REGULAR,
-        LocalDateTime.of(2011, Month.JANUARY, 1, 01, 55, 00),
+        LocalDateTime.now(),
         null,
-        3.0
+        null,
+        createCar(1L, "EPA213", null)
     )
 
     Reservation fifthReservation = createReservation(

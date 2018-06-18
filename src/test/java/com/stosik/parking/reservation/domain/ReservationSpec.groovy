@@ -1,5 +1,6 @@
 package com.stosik.parking.reservation.domain
 
+import com.stosik.parking.reservation.dto.ReservationDto
 import org.springframework.data.domain.PageRequest
 import spock.lang.Shared
 import spock.lang.Specification
@@ -10,9 +11,7 @@ class ReservationSpec extends Specification implements SampleReservations
 {
     @Shared
     Date specificDay = new SimpleDateFormat("yyyy-MM-dd").parse("2011-01-01")
-
     Meter parkingMeter = Mock()
-
     CarRepository carRepository = Mock()
     ReservationRepository reservationRepository = Mock()
 
@@ -21,27 +20,33 @@ class ReservationSpec extends Specification implements SampleReservations
     def "should successfully start parkmeter"()
     {
         given: "we have empty system"
+
         parkingMeter.startReservation(_) >> reservationWithCar
         reservationRepository.save(_) >> reservationWithCar
 
         when: "driver starts reservation"
+
         reservationFacade.startParkmeter(createReservationCommand)
 
         then: "park meter has been started for driver's car"
+
         1 * parkingMeter.startReservation(_)
     }
 
     def "should successfully stop parkmeter"()
     {
         given: "we have empty system"
+
         reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, carRepository, new ParkingMeter())
-        reservationRepository.findById(_) >> endedReservationWithCar
+        reservationRepository.findById(_) >> nowReservation
 
         when: "driver stops park meter"
-        reservationFacade.stopParkmeter(4L)
+
+        ReservationDto reservationDto = reservationFacade.stopParkmeter(4L)
 
         then: "park meter has been stopped for a driver's car"
-        1 * parkingMeter.stopReservation(_)
+        reservationDto.getStopTime() != null
+        reservationDto.getCost() == 1.0
     }
 
     def "should inform how much to pay for reservation "()
@@ -99,9 +104,11 @@ class ReservationSpec extends Specification implements SampleReservations
         carRepository.findByLicenseId(_) >> carWithReservation
 
         when: "operator checks car"
-        def startedParkmeter = reservationFacade.checkVehicle("")
+
+        def startedParkmeter = reservationFacade.checkVehicle("EPAYTSG")
 
         then: "system return response that there is parked car"
+
         startedParkmeter
     }
 
@@ -112,9 +119,11 @@ class ReservationSpec extends Specification implements SampleReservations
         carRepository.findByLicenseId(_) >> carWithoutReservation
 
         when: "operator checks car"
-        def startedParkmeter = reservationFacade.checkVehicle("")
+
+        def startedParkmeter = reservationFacade.checkVehicle("EPAYTSG")
 
         then: "system return response that car has not started park meter"
+
         !startedParkmeter
     }
 }

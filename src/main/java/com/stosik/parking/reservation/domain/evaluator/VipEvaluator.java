@@ -7,30 +7,29 @@ import java.math.BigDecimal;
 
 public class VipEvaluator implements RateEvaluatorStrategy
 {
-    private static final double FIRST_HOUR_COST = 0.0;
-    private static final Double SECOND_HOUR_COST = 2.0;
-    private static final Double CONVERSION_RATE = 1.2;
+    private static final BigDecimal FIRST_HOUR_COST = BigDecimal.valueOf(0.0);
+    private static final BigDecimal SECOND_HOUR_COST = BigDecimal.valueOf(2.0);
+    private static final BigDecimal CONVERSION_RATE = BigDecimal.valueOf(1.2);
+    private static final int ALREADY_STARTED_HOUR = 1;
     
     @Override
     public BigDecimal calculateReservationCost(Reservation reservation)
     {
-        int hours = DateUtils.hoursDifference(reservation.getStartTime(), reservation.getStopTime()) + 1;
+        int hours = DateUtils.hoursDifference(reservation.getStartTime(), reservation.getStopTime()) + ALREADY_STARTED_HOUR;
         
         switch(hours)
         {
             case 1:
-                return BigDecimal.valueOf(FIRST_HOUR_COST);
+                return FIRST_HOUR_COST;
             case 2:
-                return BigDecimal.valueOf(FIRST_HOUR_COST + SECOND_HOUR_COST);
+                return FIRST_HOUR_COST.add(SECOND_HOUR_COST);
             default:
-                return BigDecimal.valueOf(FIRST_HOUR_COST +
-                       SECOND_HOUR_COST +
-                       countEachNextHour(SECOND_HOUR_COST, 2, hours));
+                return FIRST_HOUR_COST.add(SECOND_HOUR_COST).add(countEachNextHour(SECOND_HOUR_COST, 2, hours));
         }
     }
     
-    private double countEachNextHour(double result, int hour, int reservationHours)
+    private BigDecimal countEachNextHour(BigDecimal result, int hour, int reservationHours)
     {
-        return hour == reservationHours ? result : countEachNextHour(CONVERSION_RATE * result, ++hour, reservationHours);
+        return hour == reservationHours ? result : countEachNextHour(CONVERSION_RATE.multiply(result), ++hour, reservationHours);
     }
 }

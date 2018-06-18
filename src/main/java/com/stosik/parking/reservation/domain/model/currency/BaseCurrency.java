@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 class BaseCurrency
 {
     String symbol;
+    
     double ratio;
 }
