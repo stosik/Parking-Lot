@@ -7,8 +7,8 @@ import lombok.Data;
 import lombok.NonNull;
 
 @Data
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
 public class CreateReservationCommand
 {
     @NonNull

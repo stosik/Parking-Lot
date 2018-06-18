@@ -4,11 +4,8 @@ import com.stosik.parking.reservation.domain.ReservationFacade;
 import com.stosik.parking.reservation.dto.CreateReservationCommand;
 import com.stosik.parking.reservation.dto.ReservationDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -51,8 +48,8 @@ class ParkingController
     }
     
     @GetMapping("/owner/earnings")
-    public BigDecimal retrieveDailyTakings(Pageable pageable, @RequestParam @DateTimeFormat(pattern="dd-MM-yyyy") Date specificDay)
+    public BigDecimal retrieveDailyTakings(@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") Date specificDay)
     {
-        return reservationFacade.dailyTakings(pageable, specificDay);
+        return reservationFacade.dailyTakings(specificDay);
     }
 }

@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -38,10 +37,8 @@ public class Reservation
     @Enumerated(EnumType.STRING)
     private DriverType driverType;
     
-    @CreatedDate
     private LocalDateTime startTime;
     
-    @CreatedDate
     private LocalDateTime stopTime;
     
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)

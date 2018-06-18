@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-class BaseCurrency
+public class BaseCurrency
 {
     String symbol;
     

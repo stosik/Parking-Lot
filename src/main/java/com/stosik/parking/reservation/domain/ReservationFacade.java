@@ -6,12 +6,12 @@ import com.stosik.parking.reservation.domain.model.Reservation;
 import com.stosik.parking.reservation.dto.CreateReservationCommand;
 import com.stosik.parking.reservation.dto.ReservationDto;
 import com.stosik.parking.reservation.exceptions.ReservationNotFoundException;
-import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 
 @Transactional
 public class ReservationFacade
@@ -34,10 +34,12 @@ public class ReservationFacade
     
     public ReservationDto startParkmeter(CreateReservationCommand createReservationCommand)
     {
-        Reservation reservation = parkingMeter.startReservation(createReservationCommand);
-        reservation = reservationRepository.save(reservation);
-        
-        return reservationDtoCreator.from(reservation);
+        return Optional
+            .ofNullable(createReservationCommand)
+            .map(parkingMeter::startReservation)
+            .map(reservationRepository::save)
+            .map(reservationDtoCreator::from)
+            .orElse(ReservationDto.builder().build());
     }
     
     public ReservationDto stopParkmeter(Long id)
@@ -67,13 +69,13 @@ public class ReservationFacade
             .isPresent();
     }
     
-    public BigDecimal dailyTakings(Pageable pageable, Date day)
+    public BigDecimal dailyTakings(Date specificDay)
     {
         Calendar cal = Calendar.getInstance();
-        cal.setTime(day);
+        cal.setTime(specificDay);
         
         return reservationRepository
-            .findByDate(pageable, cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR))
+            .findByDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR))
             .stream()
             .map(Reservation::getCost)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
