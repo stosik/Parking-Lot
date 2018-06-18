@@ -1,9 +1,11 @@
 package com.stosik.parking.reservation.domain;
 
 import com.stosik.parking.reservation.domain.evaluator.PriceCalculator;
+import com.stosik.parking.reservation.domain.model.Car;
 import com.stosik.parking.reservation.domain.model.Reservation;
 import com.stosik.parking.reservation.dto.CreateReservationCommand;
 import com.stosik.parking.reservation.dto.ReservationDto;
+import com.stosik.parking.reservation.exceptions.ReservationNotFoundException;
 import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
@@ -40,27 +42,29 @@ public class ReservationFacade
     
     public ReservationDto stopParkmeter(Long id)
     {
-        Reservation reservation = reservationRepository.findById(id);
-        reservation = parkingMeter.stopReservation(reservation);
-        reservation.setCost(priceCalculator.calculatePrice(reservation));
-        
-        return reservationDtoCreator.from(reservation);
+        return reservationRepository
+            .findById(id)
+            .map(parkingMeter::stopReservation)
+            .map(this::calculateCost)
+            .map(reservationDtoCreator::from)
+            .orElseThrow(() -> new ReservationNotFoundException(id));
     }
     
     public BigDecimal dispendReservationTicket(Long id)
     {
         return reservationRepository
             .findById(id)
-            .getCost();
+            .map(Reservation::getCost)
+            .orElseThrow(() -> new ReservationNotFoundException(id));
     }
     
     public boolean checkVehicle(String licenseId)
     {
-        Reservation reservation = carRepository
+        return carRepository
             .findByLicenseId(licenseId)
-            .getReservation();
-        
-        return hasStartedParkmeter(reservation);
+            .map(Car::getReservation)
+            .filter(this::hasStartedParkmeter)
+            .isPresent();
     }
     
     public BigDecimal dailyTakings(Pageable pageable, Date day)
@@ -78,5 +82,12 @@ public class ReservationFacade
     private boolean hasStartedParkmeter(Reservation reservation)
     {
         return reservation.getStartTime() != null;
+    }
+    
+    private Reservation calculateCost(Reservation reservation)
+    {
+        reservation.setCost(priceCalculator.calculatePrice(reservation));
+        
+        return reservation;
     }
 }

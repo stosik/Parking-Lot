@@ -38,7 +38,7 @@ class ReservationSpec extends Specification implements SampleReservations
         given: "we have empty system"
 
         reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, carRepository, new ParkingMeter())
-        reservationRepository.findById(_) >> nowReservation
+        reservationRepository.findById(_) >> Optional.of(nowReservation)
 
         when: "driver stops park meter"
 
@@ -54,7 +54,7 @@ class ReservationSpec extends Specification implements SampleReservations
         given: "we have empty system"
 
         reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, carRepository, parkingMeter)
-        reservationRepository.findById(_) >> firstEndedReservation
+        reservationRepository.findById(_) >> Optional.of(firstEndedReservation)
 
         when: "driver asks how much to pay giving ticket with id reservation"
 
@@ -101,7 +101,7 @@ class ReservationSpec extends Specification implements SampleReservations
     {
         given: "driver started park meter for his car"
 
-        carRepository.findByLicenseId(_) >> carWithReservation
+        carRepository.findByLicenseId(_) >> Optional.of(carWithReservation)
 
         when: "operator checks car"
 
@@ -116,7 +116,7 @@ class ReservationSpec extends Specification implements SampleReservations
     {
         given: "driver started park meter for his car"
 
-        carRepository.findByLicenseId(_) >> carWithoutReservation
+        carRepository.findByLicenseId(_) >> Optional.of(carWithoutReservation)
 
         when: "operator checks car"
 
