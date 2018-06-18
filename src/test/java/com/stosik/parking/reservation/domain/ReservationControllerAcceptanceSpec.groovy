@@ -1,6 +1,7 @@
 package com.stosik.parking.reservation.domain
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.stosik.parking.base.IntegrationSpec
 import com.stosik.parking.reservation.domain.model.DriverType
 import com.stosik.parking.reservation.dto.ReservationDto
@@ -23,6 +24,7 @@ class ReservationControllerAcceptanceSpec extends IntegrationSpec implements Sam
     {
         given: "given system is completely empty"
 
+        mapper.registerModule(new JavaTimeModule())
         def content = mapper.writeValueAsString(createReservationCommand)
 
         when: "driver starts park meter"
@@ -52,7 +54,7 @@ class ReservationControllerAcceptanceSpec extends IntegrationSpec implements Sam
         then: "he gets response with cost of reservation"
 
         BigDecimal cost = mapper.readValue(dispendedCostResponse, BigDecimal.class)
-        cost == 2.0
+        cost == 1.0
     }
 
     def "should show valid path for operator"()

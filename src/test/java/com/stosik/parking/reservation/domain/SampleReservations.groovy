@@ -32,7 +32,7 @@ trait SampleReservations
         LocalDateTime.now(),
         null,
         null,
-        createCar(1L, "EPA213", null)
+        createCar( "EPA213", null)
     )
 
     Reservation notStartedReservationWithCar = createReservationWithCar(
@@ -41,7 +41,7 @@ trait SampleReservations
         null,
         null,
         null,
-        createCar(1L, "EPA213", null)
+        createCar( "EPA213", null)
     )
 
     Reservation reservationWithCar = createReservationWithCar(
@@ -50,7 +50,7 @@ trait SampleReservations
         LocalDateTime.of(2011, Month.JANUARY, 1, 01, 55, 00),
         null,
         0.0,
-        createCar(1L, "EPA213", null)
+        createCar( "EPA213", null)
     )
 
     Reservation reservationWithCarInt = createReservationWithCar(
@@ -59,7 +59,7 @@ trait SampleReservations
         LocalDateTime.of(2011, Month.JANUARY, 1, 00, 55, 00),
         LocalDateTime.of(2011, Month.JANUARY, 1, 01, 55, 00),
         3.0,
-        createCar(null, "EPA213", null)
+        createCar("EPA213", null)
     )
 
 
@@ -69,7 +69,6 @@ trait SampleReservations
     )
 
     Car carWithReservation = createCar(
-        1L,
         "ELP234",
         createReservation(
             6L,
@@ -81,7 +80,6 @@ trait SampleReservations
     )
 
     Car carWithoutReservation = createCar(
-        1L,
         "ELP234",
         createReservation(
             6L,
@@ -126,11 +124,10 @@ trait SampleReservations
             .build()
     }
 
-    static private Car createCar(Long id, String licenseId, Reservation reservation)
+    static private Car createCar(String licenseId, Reservation reservation)
     {
         return Car
             .builder()
-            .id(id)
             .licenseId(licenseId)
             .reservation(reservation)
             .build()

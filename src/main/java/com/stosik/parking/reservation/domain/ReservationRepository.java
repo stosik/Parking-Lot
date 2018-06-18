@@ -6,9 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 interface ReservationRepository extends JpaRepository<Reservation, Long>
 {
+    @Query("SELECT r from Reservation r join fetch r.car")
+    Optional<Reservation> findById(Long id);
+    
     @Query("SELECT r FROM Reservation r WHERE DAY(r.stopTime) = :day and MONTH(r.stopTime) = :month and YEAR(r.stopTime) = :year")
     List<Reservation> findByDate(@Param("day") int day, @Param("month") int month, @Param("year") int year);
 }

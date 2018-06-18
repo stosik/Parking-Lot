@@ -5,6 +5,7 @@ import com.stosik.parking.reservation.domain.model.Car;
 import com.stosik.parking.reservation.domain.model.Reservation;
 import com.stosik.parking.reservation.dto.CreateReservationCommand;
 import com.stosik.parking.reservation.dto.ReservationDto;
+import com.stosik.parking.reservation.exceptions.CreateReservationException;
 import com.stosik.parking.reservation.exceptions.ReservationNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,8 +32,8 @@ public class ReservationFacade
         this.reservationRepository = reservationRepository;
         this.carRepository = carRepository;
         this.priceCalculator = priceCalculator;
-        this.reservationDtoCreator = reservationDtoCreator;
         this.parkingMeter = parkingMeter;
+        this.reservationDtoCreator = reservationDtoCreator;
     }
     
     public ReservationDto startParkmeter(CreateReservationCommand createReservationCommand)
@@ -51,6 +52,7 @@ public class ReservationFacade
             .findById(id)
             .map(parkingMeter::stopReservation)
             .map(this::calculateCost)
+            .map(this::driveAwayCar)
             .map(reservationDtoCreator::from)
             .orElseThrow(() -> new ReservationNotFoundException(id));
     }
@@ -74,7 +76,9 @@ public class ReservationFacade
     
     public BigDecimal dailyTakings(Date dateToCheck)
     {
-        LocalDate specificDay = dateToCheck.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate specificDay = dateToCheck
+            .toInstant()
+            .atZone(ZoneId.systemDefault()).toLocalDate();
         
         return reservationRepository
             .findByDate(specificDay.getDayOfMonth(), specificDay.getMonthValue(), specificDay.getYear())
@@ -92,6 +96,12 @@ public class ReservationFacade
     {
         reservation.setCost(priceCalculator.calculatePrice(reservation));
         
+        return reservation;
+    }
+    
+    private Reservation driveAwayCar(Reservation reservation)
+    {
+        carRepository.deleteByLicenseId(reservation.getCar().getLicenseId());
         return reservation;
     }
 }
