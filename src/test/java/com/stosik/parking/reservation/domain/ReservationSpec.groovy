@@ -70,11 +70,11 @@ class ReservationSpec extends Specification implements SampleReservations
         given: "we have empty system"
 
         reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, carRepository, new ParkingMeter())
-        reservationRepository.findByDate(_, _, _, _) >> Collections.singletonList(firstEndedReservation)
+        reservationRepository.findByDate(_, _, _) >> Collections.singletonList(firstEndedReservation)
 
         when: "we ask for all reservations on 01.01.2011"
 
-        BigDecimal earningsForSpecificDay = reservationFacade.dailyTakings(new PageRequest(0, 10), specificDay)
+        BigDecimal earningsForSpecificDay = reservationFacade.dailyTakings(specificDay)
 
         then: "system returns correctly calculated earnings"
 
@@ -86,11 +86,11 @@ class ReservationSpec extends Specification implements SampleReservations
         given: "we have three reservations (regular, vip, regular) in a system"
 
         reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, carRepository, new ParkingMeter())
-        reservationRepository.findByDate(_, _, _, _) >> Arrays.asList(firstEndedReservation, secondEndedReservation)
+        reservationRepository.findByDate(_, _, _) >> Arrays.asList(firstEndedReservation, secondEndedReservation)
 
         when: "we ask for all reservations on 01.01.2011"
 
-        BigDecimal earningsForSpecificDay = reservationFacade.dailyTakings(new PageRequest(0, 10), specificDay)
+        BigDecimal earningsForSpecificDay = reservationFacade.dailyTakings(specificDay)
 
         then: "system returns correctly calculated earnings"
 

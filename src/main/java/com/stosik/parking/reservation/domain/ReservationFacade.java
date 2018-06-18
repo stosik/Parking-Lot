@@ -6,14 +6,17 @@ import com.stosik.parking.reservation.domain.model.Reservation;
 import com.stosik.parking.reservation.dto.CreateReservationCommand;
 import com.stosik.parking.reservation.dto.ReservationDto;
 import com.stosik.parking.reservation.exceptions.ReservationNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
 
 @Transactional
+@Slf4j
 public class ReservationFacade
 {
     private final ReservationRepository reservationRepository;
@@ -69,13 +72,12 @@ public class ReservationFacade
             .isPresent();
     }
     
-    public BigDecimal dailyTakings(Date specificDay)
+    public BigDecimal dailyTakings(Date dateToCheck)
     {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(specificDay);
+        LocalDate specificDay = dateToCheck.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         
         return reservationRepository
-            .findByDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR))
+            .findByDate(specificDay.getDayOfMonth(), specificDay.getMonthValue(), specificDay.getYear())
             .stream()
             .map(Reservation::getCost)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
