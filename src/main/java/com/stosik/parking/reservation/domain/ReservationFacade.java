@@ -5,7 +5,6 @@ import com.stosik.parking.reservation.domain.model.Car;
 import com.stosik.parking.reservation.domain.model.Reservation;
 import com.stosik.parking.reservation.dto.CreateReservationCommand;
 import com.stosik.parking.reservation.dto.ReservationDto;
-import com.stosik.parking.reservation.exceptions.CreateReservationException;
 import com.stosik.parking.reservation.exceptions.ReservationNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,8 +51,8 @@ public class ReservationFacade
             .findById(id)
             .map(parkingMeter::stopReservation)
             .map(this::calculateCost)
-            .map(this::driveAwayCar)
             .map(reservationDtoCreator::from)
+            .map(this::driveAwayCar)
             .orElseThrow(() -> new ReservationNotFoundException(id));
     }
     
@@ -99,9 +98,9 @@ public class ReservationFacade
         return reservation;
     }
     
-    private Reservation driveAwayCar(Reservation reservation)
+    private ReservationDto driveAwayCar(ReservationDto reservation)
     {
-        carRepository.deleteByLicenseId(reservation.getCar().getLicenseId());
+        carRepository.deleteByLicenseId(reservation.getCarLicenseId());
         return reservation;
     }
 }
