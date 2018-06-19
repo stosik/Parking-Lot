@@ -1,6 +1,5 @@
 package com.stosik.parking.reservation.domain
 
-import com.stosik.parking.reservation.domain.model.Car
 import com.stosik.parking.reservation.domain.model.DriverType
 import com.stosik.parking.reservation.domain.model.Reservation
 import com.stosik.parking.reservation.dto.CreateReservationCommand
@@ -10,12 +9,13 @@ import java.time.Month
 
 trait SampleReservations
 {
-    Reservation firstEndedReservation = createReservation(
+    Reservation endedReservationWithCar = createReservation(
         1L,
         DriverType.REGULAR,
         LocalDateTime.of(2011, Month.JANUARY, 1, 00, 55, 00),
         LocalDateTime.of(2011, Month.JANUARY, 1, 01, 55, 00),
-        3.0
+        3.0,
+        "EPA123"
     )
 
     Reservation secondEndedReservation = createReservation(
@@ -23,74 +23,61 @@ trait SampleReservations
         DriverType.REGULAR,
         LocalDateTime.of(2011, Month.JANUARY, 1, 00, 55, 00),
         LocalDateTime.of(2011, Month.JANUARY, 1, 02, 55, 00),
-        7.4
+        6.0,
+        "ELA123"
     )
 
-    Reservation nowReservation = createReservationWithCar(
+    Reservation regularEndedReservation = createReservation(
+        2L,
+        DriverType.REGULAR,
+        LocalDateTime.of(2011, Month.JANUARY, 1, 00, 55, 00),
+        LocalDateTime.of(2011, Month.JANUARY, 1, 02, 55, 00),
+        6.0,
+        "ELA123"
+    )
+
+    Reservation vipEndedReservation = createReservation(
+        3L,
+        DriverType.VIP,
+        LocalDateTime.of(2011, Month.JANUARY, 1, 00, 55, 00),
+        LocalDateTime.of(2011, Month.JANUARY, 1, 02, 55, 00),
+        4.4,
+        "ELA123"
+    )
+
+    Reservation parkedReservation = createReservation(
         4L,
         DriverType.REGULAR,
         LocalDateTime.now(),
         null,
         null,
-        createCar( "EPA213", null)
+        "ELW293"
     )
 
-    Reservation notStartedReservationWithCar = createReservationWithCar(
+    Reservation nowReservationWithCar = createReservation(
+        4L,
+        DriverType.REGULAR,
+        LocalDateTime.now(),
+        null,
+        null,
+        "ELW293"
+    )
+
+    Reservation reservationWithoutCar = createReservation(
         6L,
         DriverType.REGULAR,
         null,
         null,
         null,
-        createCar( "EPA213", null)
+        null
     )
-
-    Reservation reservationWithCar = createReservationWithCar(
-        4L,
-        DriverType.REGULAR,
-        LocalDateTime.of(2011, Month.JANUARY, 1, 01, 55, 00),
-        null,
-        0.0,
-        createCar( "EPA213", null)
-    )
-
-    Reservation reservationWithCarInt = createReservationWithCar(
-        null,
-        DriverType.REGULAR,
-        LocalDateTime.of(2011, Month.JANUARY, 1, 00, 55, 00),
-        LocalDateTime.of(2011, Month.JANUARY, 1, 01, 55, 00),
-        3.0,
-        createCar("EPA213", null)
-    )
-
 
     CreateReservationCommand createReservationCommand = createCommand(
         DriverType.REGULAR,
         "EPA234"
     )
 
-    Car carWithReservation = createCar(
-        "ELP234",
-        createReservation(
-            6L,
-            DriverType.REGULAR,
-            LocalDateTime.of(2011, Month.JANUARY, 1, 00, 55, 00),
-            null,
-            null
-        )
-    )
-
-    Car carWithoutReservation = createCar(
-        "ELP234",
-        createReservation(
-            6L,
-            DriverType.REGULAR,
-            null,
-            null,
-            null
-        )
-    )
-
-    static private Reservation createReservation(Long id, DriverType driverType, LocalDateTime start, LocalDateTime stop, BigDecimal cost)
+    static private Reservation createReservation(Long id, DriverType driverType, LocalDateTime start, LocalDateTime stop, BigDecimal cost, String licenseId)
     {
         return Reservation
             .builder()
@@ -98,19 +85,7 @@ trait SampleReservations
             .startTime(start)
             .stopTime(stop)
             .driverType(driverType)
-            .cost(cost)
-            .build()
-    }
-
-    static private Reservation createReservationWithCar(Long id, DriverType driverType, LocalDateTime start, LocalDateTime stop, BigDecimal cost, Car car)
-    {
-        return Reservation
-            .builder()
-            .id(id)
-            .startTime(start)
-            .stopTime(stop)
-            .car(car)
-            .driverType(driverType)
+            .carLicenseId(licenseId)
             .cost(cost)
             .build()
     }
@@ -121,15 +96,6 @@ trait SampleReservations
             .builder()
             .driverType(driverType)
             .carLicenseId(carLicenseId)
-            .build()
-    }
-
-    static private Car createCar(String licenseId, Reservation reservation)
-    {
-        return Car
-            .builder()
-            .licenseId(licenseId)
-            .reservation(reservation)
             .build()
     }
 }

@@ -14,7 +14,7 @@ public class ReservationDtoCreator
             .driverType(reservation.getDriverType())
             .startTime(reservation.getStartTime())
             .stopTime(reservation.getStopTime())
-            .carLicenseId(reservation.getCar().getLicenseId())
+            .carLicenseId(reservation.getCarLicenseId())
             .cost(reservation.getCost())
             .build();
     }

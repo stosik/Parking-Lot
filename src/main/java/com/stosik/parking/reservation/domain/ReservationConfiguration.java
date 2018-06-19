@@ -8,11 +8,11 @@ import org.springframework.context.annotation.Configuration;
 class ReservationConfiguration
 {
     @Bean
-    ReservationFacade reservationFacade(ReservationRepository reservationRepository, CarRepository carRepository, Meter parkingMeter)
+    ReservationFacade reservationFacade(ReservationRepository reservationRepository, ParkingStore parkingStore, Meter parkingMeter)
     {
         PriceCalculator priceCalculator = new PriceCalculator();
         ReservationDtoCreator reservationDtoCreator = new ReservationDtoCreator();
         
-        return new ReservationFacade(reservationRepository, carRepository, priceCalculator, parkingMeter, reservationDtoCreator);
+        return new ReservationFacade(reservationRepository, parkingStore, priceCalculator, parkingMeter, reservationDtoCreator);
     }
 }

@@ -1,7 +1,6 @@
 package com.stosik.parking.reservation.domain
 
 import com.stosik.parking.reservation.dto.ReservationDto
-import org.springframework.data.domain.PageRequest
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -12,17 +11,13 @@ class ReservationSpec extends Specification implements SampleReservations
     @Shared
     Date specificDay = new SimpleDateFormat("yyyy-MM-dd").parse("2011-01-01")
     Meter parkingMeter = Mock()
-    CarRepository carRepository = Mock()
     ReservationRepository reservationRepository = Mock()
 
-    def reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, carRepository, parkingMeter)
+    def reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, new ParkingStore(), parkingMeter)
 
     def "should successfully start parkmeter"()
     {
         given: "we have empty system"
-
-        parkingMeter.startReservation(_) >> reservationWithCar
-        reservationRepository.save(_) >> reservationWithCar
 
         when: "driver starts reservation"
 
@@ -37,40 +32,40 @@ class ReservationSpec extends Specification implements SampleReservations
     {
         given: "we have empty system"
 
-        reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, carRepository, new ParkingMeter())
-        reservationRepository.findById(_) >> Optional.of(nowReservation)
+        reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, new ParkingStore(), new ParkingMeter())
+        reservationRepository.save(_) >> endedReservationWithCar
 
         when: "driver stops park meter"
-
-        ReservationDto reservationDto = reservationFacade.stopParkmeter(4L)
+        reservationFacade.startParkmeter(createReservationCommand)
+        ReservationDto reservationDto = reservationFacade.stopParkmeter("EPA234")
 
         then: "park meter has been stopped for a driver's car"
         reservationDto.getStopTime() != null
-        reservationDto.getCost() == 1.0
+        reservationDto.getCost() == 3.0
     }
 
     def "should inform how much to pay for reservation "()
     {
         given: "we have empty system"
 
-        reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, carRepository, parkingMeter)
-        reservationRepository.findById(_) >> Optional.of(firstEndedReservation)
+        reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, new ParkingStore(), parkingMeter)
+        reservationRepository.findById(_) >> Optional.of(regularEndedReservation)
 
-        when: "driver asks how much to pay giving ticket with id reservation"
+        when: "regular driver asks how much to pay giving ticket with license id of parked car"
 
         BigDecimal cost = reservationFacade.dispendReservationTicket(1L)
 
         then: "he is informed how much his reservation cost"
 
-        cost == 3.0
+        cost == 6.0
     }
 
     def "should return correct earnings for owner for specific day"()
     {
         given: "we have empty system"
 
-        reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, carRepository, new ParkingMeter())
-        reservationRepository.findByDate(_, _, _) >> Collections.singletonList(firstEndedReservation)
+        reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, new ParkingStore(),new ParkingMeter())
+        reservationRepository.findByDate(_, _, _) >> Collections.singletonList(endedReservationWithCar)
 
         when: "we ask for all reservations on 01.01.2011"
 
@@ -85,8 +80,8 @@ class ReservationSpec extends Specification implements SampleReservations
     {
         given: "we have three reservations (regular, vip, regular) in a system"
 
-        reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, carRepository, new ParkingMeter())
-        reservationRepository.findByDate(_, _, _) >> Arrays.asList(firstEndedReservation, secondEndedReservation)
+        reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, new ParkingStore(), new ParkingMeter())
+        reservationRepository.findByDate(_, _, _) >> Arrays.asList(vipEndedReservation, secondEndedReservation)
 
         when: "we ask for all reservations on 01.01.2011"
 
@@ -100,12 +95,13 @@ class ReservationSpec extends Specification implements SampleReservations
     def "should check whether driver's car has started park meter"()
     {
         given: "driver started park meter for his car"
-
-        carRepository.findByLicenseId(_) >> Optional.of(carWithReservation)
+        ParkingStore parkingStore = Mock()
+        reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, parkingStore, new ParkingMeter())
+        parkingStore.findAll(_) >> Collections.singletonList(parkedReservation)
 
         when: "operator checks car"
 
-        def startedParkmeter = reservationFacade.checkVehicle("EPAYTSG")
+        def startedParkmeter = reservationFacade.checkVehicle("ELW293")
 
         then: "system return response that there is parked car"
 

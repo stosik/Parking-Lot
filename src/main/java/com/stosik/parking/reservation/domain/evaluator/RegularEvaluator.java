@@ -24,12 +24,12 @@ class RegularEvaluator implements RateEvaluatorStrategy
             case 2:
                 return FIRST_HOUR_COST.add(SECOND_HOUR_COST);
             default:
-                return FIRST_HOUR_COST.add(SECOND_HOUR_COST).add(countEachNextHour(SECOND_HOUR_COST, 2, hours));
+                return FIRST_HOUR_COST.add(SECOND_HOUR_COST).add(countEachNextHourCost(SECOND_HOUR_COST, 2, hours));
         }
     }
     
-    private BigDecimal countEachNextHour(BigDecimal result, int actualHour, int reservationHours)
+    private BigDecimal countEachNextHourCost(BigDecimal result, int actualHour, int reservationHours)
     {
-        return actualHour == reservationHours ? result : countEachNextHour(CONVERSION_RATE.multiply(result), ++actualHour, reservationHours);
+        return actualHour == reservationHours ? result : countEachNextHourCost(CONVERSION_RATE.multiply(result), ++actualHour, reservationHours);
     }
 }

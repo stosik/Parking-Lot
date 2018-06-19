@@ -6,16 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -40,8 +39,8 @@ public class Reservation
     
     private LocalDateTime stopTime;
     
-    @OneToOne(cascade = CascadeType.ALL)
-    private Car car;
+    @Size(min = 6, max = 6)
+    String carLicenseId;
     
     private BigDecimal cost;
 }

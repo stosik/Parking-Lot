@@ -10,7 +10,7 @@ import java.util.Optional;
 
 interface ReservationRepository extends JpaRepository<Reservation, Long>
 {
-    @Query("SELECT r from Reservation r join fetch r.car")
+    @Query("SELECT r from Reservation r")
     Optional<Reservation> findById(Long id);
     
     @Query("SELECT r FROM Reservation r WHERE DAY(r.stopTime) = :day and MONTH(r.stopTime) = :month and YEAR(r.stopTime) = :year")

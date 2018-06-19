@@ -1,6 +1,5 @@
 package com.stosik.parking.reservation.domain;
 
-import com.stosik.parking.reservation.domain.model.Car;
 import com.stosik.parking.reservation.domain.model.Reservation;
 import com.stosik.parking.reservation.dto.CreateReservationCommand;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,7 @@ class ParkingMeter implements Meter
         return Reservation
             .builder()
             .startTime(LocalDateTime.now(Clock.systemDefaultZone()))
-            .car(Car.builder().licenseId(command.getCarLicenseId()).build())
+            .carLicenseId(command.getCarLicenseId())
             .driverType(command.getDriverType())
             .build();
     }

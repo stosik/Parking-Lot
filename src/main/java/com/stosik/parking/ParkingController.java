@@ -30,15 +30,15 @@ class ParkingController
     }
     
     @PutMapping("/driver/stop")
-    public ReservationDto stopParkmeter(@RequestParam Long id)
+    public ReservationDto stopParkmeter(@RequestParam String licenseId)
     {
-        return reservationFacade.stopParkmeter(id);
+        return reservationFacade.stopParkmeter(licenseId);
     }
     
     @GetMapping("/driver/cost")
-    public BigDecimal dispendReservationCost(@RequestParam Long id)
+    public BigDecimal dispendReservationCost(@RequestParam Long reservationId)
     {
-        return reservationFacade.dispendReservationTicket(id);
+        return reservationFacade.dispendReservationTicket(reservationId);
     }
     
     @GetMapping("/operator/control")

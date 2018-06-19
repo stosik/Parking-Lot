@@ -1,7 +1,6 @@
 package com.stosik.parking.reservation.domain;
 
 import com.stosik.parking.reservation.domain.evaluator.PriceCalculator;
-import com.stosik.parking.reservation.domain.model.Car;
 import com.stosik.parking.reservation.domain.model.Reservation;
 import com.stosik.parking.reservation.dto.CreateReservationCommand;
 import com.stosik.parking.reservation.dto.ReservationDto;
@@ -13,6 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 
 @Transactional
@@ -20,16 +20,16 @@ import java.util.Optional;
 public class ReservationFacade
 {
     private final ReservationRepository reservationRepository;
-    private final CarRepository carRepository;
     private final PriceCalculator priceCalculator;
     private final Meter parkingMeter;
+    private final ParkingStore parkingStore;
     private final ReservationDtoCreator reservationDtoCreator;
     
-    ReservationFacade(ReservationRepository reservationRepository, CarRepository carRepository, PriceCalculator priceCalculator,
+    ReservationFacade(ReservationRepository reservationRepository, ParkingStore parkingStore, PriceCalculator priceCalculator,
         Meter parkingMeter, ReservationDtoCreator reservationDtoCreator)
     {
         this.reservationRepository = reservationRepository;
-        this.carRepository = carRepository;
+        this.parkingStore = parkingStore;
         this.priceCalculator = priceCalculator;
         this.parkingMeter = parkingMeter;
         this.reservationDtoCreator = reservationDtoCreator;
@@ -40,20 +40,20 @@ public class ReservationFacade
         return Optional
             .ofNullable(createReservationCommand)
             .map(parkingMeter::startReservation)
-            .map(reservationRepository::save)
+            .map(parkingStore::save)
             .map(reservationDtoCreator::from)
             .orElse(ReservationDto.builder().build());
     }
     
-    public ReservationDto stopParkmeter(Long id)
+    public ReservationDto stopParkmeter(String licenseId)
     {
-        return reservationRepository
-            .findById(id)
+        return parkingStore
+            .findById(licenseId)
             .map(parkingMeter::stopReservation)
             .map(this::calculateCost)
+            .map(reservationRepository::save)
             .map(reservationDtoCreator::from)
-            .map(this::driveAwayCar)
-            .orElseThrow(() -> new ReservationNotFoundException(id));
+            .orElseThrow(() -> new ReservationNotFoundException(licenseId));
     }
     
     public BigDecimal dispendReservationTicket(Long id)
@@ -61,16 +61,15 @@ public class ReservationFacade
         return reservationRepository
             .findById(id)
             .map(Reservation::getCost)
-            .orElseThrow(() -> new ReservationNotFoundException(id));
+            .orElseThrow(() -> new ReservationNotFoundException(String.valueOf(id)));
     }
     
     public boolean checkVehicle(String licenseId)
     {
-        return carRepository
-            .findByLicenseId(licenseId)
-            .map(Car::getReservation)
-            .filter(this::hasStartedParkmeter)
-            .isPresent();
+        return parkingStore
+            .findAll()
+            .stream()
+            .anyMatch(reservation -> hasSameLicensePlate(reservation, licenseId));
     }
     
     public BigDecimal dailyTakings(Date dateToCheck)
@@ -98,9 +97,8 @@ public class ReservationFacade
         return reservation;
     }
     
-    private ReservationDto driveAwayCar(ReservationDto reservation)
+    private boolean hasSameLicensePlate(Reservation reservation, String licenseId)
     {
-        carRepository.deleteByLicenseId(reservation.getCarLicenseId());
-        return reservation;
+        return Objects.equals(reservation.getCarLicenseId(), licenseId);
     }
 }
