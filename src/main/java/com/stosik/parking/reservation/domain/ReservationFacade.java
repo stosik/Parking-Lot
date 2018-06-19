@@ -51,6 +51,7 @@ public class ReservationFacade
             .findById(licenseId)
             .map(parkingMeter::stopReservation)
             .map(this::calculateCost)
+            .map(parkingStore::delete)
             .map(reservationRepository::save)
             .map(reservationDtoCreator::from)
             .orElseThrow(() -> new ReservationNotFoundException(licenseId));

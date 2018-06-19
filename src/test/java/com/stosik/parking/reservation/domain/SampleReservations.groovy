@@ -28,7 +28,7 @@ trait SampleReservations
     )
 
     Reservation regularEndedReservation = createReservation(
-        2L,
+        3L,
         DriverType.REGULAR,
         LocalDateTime.of(2011, Month.JANUARY, 1, 00, 55, 00),
         LocalDateTime.of(2011, Month.JANUARY, 1, 02, 55, 00),
@@ -46,7 +46,7 @@ trait SampleReservations
     )
 
     Reservation parkedReservation = createReservation(
-        4L,
+        5L,
         DriverType.REGULAR,
         LocalDateTime.now(),
         null,
@@ -54,22 +54,22 @@ trait SampleReservations
         "ELW293"
     )
 
-    Reservation nowReservationWithCar = createReservation(
-        4L,
-        DriverType.REGULAR,
-        LocalDateTime.now(),
-        null,
-        null,
-        "ELW293"
-    )
-
-    Reservation reservationWithoutCar = createReservation(
+    Reservation nonParkedReservation = createReservation(
         6L,
         DriverType.REGULAR,
         null,
         null,
         null,
-        null
+        "EPAYTSG"
+    )
+
+    Reservation stopParkReservation = createReservation(
+        8L,
+        DriverType.REGULAR,
+        LocalDateTime.of(2011, Month.JANUARY, 1, 00, 55, 00),
+        LocalDateTime.of(2011, Month.JANUARY, 1, 01, 55, 00),
+        3.0,
+        "EPA234"
     )
 
     CreateReservationCommand createReservationCommand = createCommand(

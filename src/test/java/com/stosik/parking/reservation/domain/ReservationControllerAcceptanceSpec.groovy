@@ -30,26 +30,26 @@ class ReservationControllerAcceptanceSpec extends IntegrationSpec implements Sam
         when: "driver starts park meter"
 
         ResultActions startReservationResponse = mockMvc
-            .perform(
-                post("/parking/driver/start")
-                    .contentType(contentType)
-                    .content(content)
-             )
+            .perform(post("/parking/driver/start").contentType(contentType).content(content))
             .andExpect(status().isOk())
 
         then: "there is one reservation in system"
 
-        ReservationDto reservationDto = mapper.readValue(startReservationResponse.andReturn().response.contentAsString, ReservationDto.class)
-        reservationDto.driverType == DriverType.REGULAR
-        reservationDto.carLicenseId == "EPA234"
+        ReservationDto reservationStartDto = mapper.readValue(startReservationResponse.andReturn().response.contentAsString, ReservationDto.class)
+        reservationStartDto.driverType == DriverType.REGULAR
+        reservationStartDto.carLicenseId == "EPA234"
 
         when: "driver stops park meter and ask for price of reservation"
 
-        ResultActions stopReservation = mockMvc
-            .perform(put("/parking/driver/stop").param("id", "1"))
+        ResultActions reservationStopResponse = mockMvc
+            .perform(put("/parking/driver/stop").param("licenseId", "${reservationStartDto.carLicenseId}"))
             .andExpect(status().isOk())
 
-        String dispendedCostResponse = mockMvc.perform(get("/parking/driver/cost").param("id", "1")).andReturn().response.contentAsString
+        ReservationDto reservationStopDto = mapper.readValue(reservationStopResponse.andReturn().response.contentAsString, ReservationDto.class)
+
+        String dispendedCostResponse = mockMvc
+            .perform(get("/parking/driver/cost").param("reservationId", "${reservationStopDto.id}"))
+            .andReturn().response.contentAsString
 
         then: "he gets response with cost of reservation"
 
@@ -60,13 +60,17 @@ class ReservationControllerAcceptanceSpec extends IntegrationSpec implements Sam
     def "should show valid path for operator"()
     {
         given: "there are two cars parked, one started park meter and the other didn't"
-        reservationRepository.save(reservationWithCar)
-        reservationRepository.save(notStartedReservationWithCar)
+
+
+        reservationRepository.save(nonParkedReservation)
+        reservationRepository.save(parkedReservation)
 
         when: "operator checks car which didn't start park meter"
+
         ResultActions stopReservation = mockMvc.perform(get("/parking/operator/control").param("licenseId", "EPA213"))
 
         then: "he gets successful response with status"
+
         def controlCarResponse = mapper.readValue(stopReservation.andReturn().response.contentAsString, boolean)
         !controlCarResponse
     }
@@ -74,13 +78,18 @@ class ReservationControllerAcceptanceSpec extends IntegrationSpec implements Sam
     def "should show valid path for owner"()
     {
         given: "there are 3 ended on that day (vip, regular, regular) reservations"
-        reservationRepository.save(reservationWithCarInt)
+
+        reservationRepository.save(endedReservationWithCar)
+        reservationRepository.save(secondEndedReservation)
+        reservationRepository.save(regularEndedReservation)
 
         when: "owner checks daily takings"
+
         ResultActions stopReservation = mockMvc.perform(get("/parking/owner/earnings").param("specificDay", "01-01-2011"))
 
         then: "he gets response with earned money on that day"
+
         def dailyTakings = mapper.readValue(stopReservation.andReturn().response.contentAsString, BigDecimal.class)
-        dailyTakings == 3.0
+        dailyTakings == 15.0
     }
 }

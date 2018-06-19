@@ -12,23 +12,28 @@ import java.util.stream.Collectors;
 @Repository
 public class ParkingStore
 {
-    private ConcurrentHashMap<String, Reservation> parkingStore = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Reservation> store = new ConcurrentHashMap<>();
     
     public Reservation save(Reservation reservation)
     {
-        parkingStore.put(reservation.getCarLicenseId(), reservation);
+        store.put(reservation.getCarLicenseId(), reservation);
         return reservation;
     }
     
     public Optional<Reservation> findById(String title)
     {
         return Optional
-            .of(parkingStore.get(title));
+            .of(store.get(title));
+    }
+    
+    public Reservation delete(Reservation reservation)
+    {
+        return store.remove(reservation.getCarLicenseId());
     }
     
     public List<Reservation> findAll()
     {
-        return parkingStore
+        return store
             .entrySet()
             .stream()
             .map(Map.Entry::getValue)

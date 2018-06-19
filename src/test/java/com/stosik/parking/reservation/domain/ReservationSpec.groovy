@@ -33,13 +33,15 @@ class ReservationSpec extends Specification implements SampleReservations
         given: "we have empty system"
 
         reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, new ParkingStore(), new ParkingMeter())
-        reservationRepository.save(_) >> endedReservationWithCar
+        reservationRepository.save(_) >> stopParkReservation
 
         when: "driver stops park meter"
+
         reservationFacade.startParkmeter(createReservationCommand)
         ReservationDto reservationDto = reservationFacade.stopParkmeter("EPA234")
 
-        then: "park meter has been stopped for a driver's car"
+        then: "park meter has been stopped for a driver's car and cost calculated"
+
         reservationDto.getStopTime() != null
         reservationDto.getCost() == 3.0
     }
@@ -95,9 +97,10 @@ class ReservationSpec extends Specification implements SampleReservations
     def "should check whether driver's car has started park meter"()
     {
         given: "driver started park meter for his car"
+
         ParkingStore parkingStore = Mock()
-        reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, parkingStore, new ParkingMeter())
-        parkingStore.findAll(_) >> Collections.singletonList(parkedReservation)
+        reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, parkingStore, parkingMeter)
+        parkingStore.findAll() >> Collections.singletonList(parkedReservation)
 
         when: "operator checks car"
 
@@ -112,11 +115,13 @@ class ReservationSpec extends Specification implements SampleReservations
     {
         given: "driver started park meter for his car"
 
-        carRepository.findByLicenseId(_) >> Optional.of(carWithoutReservation)
+        ParkingStore parkingStore = Mock()
+        reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, parkingStore, parkingMeter)
+        parkingStore.findAll() >> Collections.singletonList(nonParkedReservation)
 
         when: "operator checks car"
 
-        def startedParkmeter = reservationFacade.checkVehicle("EPAYTSG")
+        def startedParkmeter = reservationFacade.checkVehicle("EPAYTSS")
 
         then: "system return response that car has not started park meter"
 
