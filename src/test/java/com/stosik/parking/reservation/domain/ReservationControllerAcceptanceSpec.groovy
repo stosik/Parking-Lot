@@ -61,7 +61,6 @@ class ReservationControllerAcceptanceSpec extends IntegrationSpec implements Sam
     {
         given: "there are two cars parked, one started park meter and the other didn't"
 
-
         reservationRepository.save(nonParkedReservation)
         reservationRepository.save(parkedReservation)
 

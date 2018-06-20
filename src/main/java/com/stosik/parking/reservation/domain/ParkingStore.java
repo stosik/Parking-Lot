@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Repository
-class ParkingStore
+ class ParkingStore
 {
     private ConcurrentHashMap<String, Reservation> store = new ConcurrentHashMap<>();
     
@@ -22,8 +22,7 @@ class ParkingStore
     
     public Optional<Reservation> findById(String title)
     {
-        return Optional
-            .of(store.get(title));
+        return Optional.of(store.get(title));
     }
     
     public Reservation delete(Reservation reservation)
