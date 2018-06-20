@@ -1,4 +1,4 @@
-package com.stosik.parking;
+package com.stosik;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.Banner;
@@ -16,7 +16,7 @@ public class ParkingLotApplication
             .headless(true)
             .application()
             .run(args);
-        
-        log.info("http:\\/localhost:8080");
+    
+        log.info("\nhttp://localhost:8080/\n");
     }
 }

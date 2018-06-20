@@ -1,9 +1,16 @@
+group = 'com.stosik'
+version = '0.0.1-SNAPSHOT'
+
 buildscript {
 	ext {
 		springBootVersion = '2.0.2.RELEASE'
 		lombok = '1.16.18'
 		spockVersion = '1.1-groovy-2.4'
 		springWiremock = '1.2.4.RELEASE'
+		spock = '1.1-groovy-2.4'
+		junitPlatform = '1.1.0'
+		junit = '5.2.0'
+		googleGson = '2.8.1'
 	}
 	repositories {
 		mavenCentral()
@@ -22,9 +29,10 @@ apply plugin: 'war'
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'eclipse'
-apply plugin: "io.spring.dependency-management"
+apply plugin: 'groovy'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 
-group = 'com.stosik'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -48,6 +56,9 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile "org.projectlombok:lombok:$lombok"
 	compile('com.google.code.findbugs:jsr305:3.0.0')
+	compile('org.apache.commons:commons-lang3:3.7')
+	compile("com.google.code.gson:gson:$googleGson")
+	compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.6')
 
 	runtime('com.h2database:h2')
 
@@ -57,5 +68,8 @@ dependencies {
 	testCompile("com.athaydes:spock-reports:1.6.0") {
 		transitive = false
 	}
+	testCompile "org.codehaus.groovy:groovy-all"
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile "org.junit.platform:junit-platform-runner:${junitPlatform}"
+	testRuntime "org.junit.vintage:junit-vintage-engine:${junit}"
 }
