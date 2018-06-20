@@ -13,7 +13,7 @@ class ReservationSpec extends Specification implements SampleReservations
     Meter parkingMeter = Mock()
     ReservationRepository reservationRepository = Mock()
 
-    def reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, new ParkingStore(), parkingMeter)
+    def reservationFacade = new ReservationConfiguration().reservationFacade(reservationRepository, new ParkingStore(), new ParkingMeter())
 
     def "should successfully start parkmeter"()
     {
@@ -21,11 +21,12 @@ class ReservationSpec extends Specification implements SampleReservations
 
         when: "driver starts reservation"
 
-        reservationFacade.startParkmeter(createReservationCommand)
+        ReservationDto reservationStartDto = reservationFacade.startParkmeter(createReservationCommand)
 
         then: "park meter has been started for driver's car"
 
-        1 * parkingMeter.startReservation(_)
+        reservationStartDto.carLicenseId == 'EPA234'
+        reservationStartDto.startTime != null
     }
 
     def "should successfully stop parkmeter"()

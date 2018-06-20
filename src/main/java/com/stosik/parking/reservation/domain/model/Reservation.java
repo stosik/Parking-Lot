@@ -36,12 +36,12 @@ public class Reservation
     @Enumerated(EnumType.STRING)
     private DriverType driverType;
     
+    @Size(min = 6, max = 6)
+    private String carLicenseId;
+    
+    private BigDecimal cost;
+    
     private LocalDateTime startTime;
     
     private LocalDateTime stopTime;
-    
-    @Size(min = 6, max = 6)
-    String carLicenseId;
-    
-    private BigDecimal cost;
 }

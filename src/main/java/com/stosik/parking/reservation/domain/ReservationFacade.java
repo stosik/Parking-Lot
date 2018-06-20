@@ -4,6 +4,7 @@ import com.stosik.parking.reservation.domain.evaluator.PriceCalculator;
 import com.stosik.parking.reservation.domain.model.Reservation;
 import com.stosik.parking.reservation.dto.CreateReservationCommand;
 import com.stosik.parking.reservation.dto.ReservationDto;
+import com.stosik.parking.reservation.exceptions.CreateReservationException;
 import com.stosik.parking.reservation.exceptions.ReservationNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,7 +43,7 @@ public class ReservationFacade
             .map(parkingMeter::startReservation)
             .map(parkingStore::save)
             .map(reservationDtoCreator::from)
-            .orElse(ReservationDto.builder().build());
+            .orElseThrow(CreateReservationException::new);
     }
     
     public ReservationDto stopParkmeter(String licenseId)
@@ -84,11 +85,6 @@ public class ReservationFacade
             .stream()
             .map(Reservation::getCost)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-    
-    private boolean hasStartedParkmeter(Reservation reservation)
-    {
-        return reservation.getStartTime() != null;
     }
     
     private Reservation calculateCost(Reservation reservation)

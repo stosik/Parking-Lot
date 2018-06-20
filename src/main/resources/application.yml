@@ -11,7 +11,7 @@ spring:
     platform: h2
     url: jdbc:h2:file:~/test;
     username: sa
-    password: sa
+    password:
     driver-class-name: org.h2.Driver
 
   jpa:
